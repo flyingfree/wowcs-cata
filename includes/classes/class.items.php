@@ -484,17 +484,17 @@ Class WoW_Items {
             if($itemsetdata['bonus' . $i] > 0) {
                 $threshold = $itemsetdata['threshold' . $i];
                 $spell_tmp = array();
-                $spell_tmp = DB::WoW()->selectRow("SELECT * FROM `DBPREFIX_spell` WHERE `id`=%d", $itemsetdata['bonus' . $i]);
-                if(!isset($spell_tmp['Description_' . $tmp_locale]) || empty($spell_tmp['Description_' . $tmp_locale])) {
+                $spell_tmp = DB::WoW()->selectRow("SELECT * FROM `DBPREFIX_spell` WHERE `m_ID`=%d", $itemsetdata['bonus' . $i]);
+                if(!isset($spell_tmp['m_description_' . $tmp_locale]) || empty($spell_tmp['m_description_' . $tmp_locale])) {
                     // try to find en_gb locale
-                    if(isset($spell_tmp['Description_en']) && !empty($spell_tmp['Description_en'])) {
+                    if(isset($spell_tmp['m_description_en']) && !empty($spell_tmp['m_description_en'])) {
                         $tmp_locale = 'en';
                     }
                     else {
                         continue;
                     }
                 }
-                $itemSetBonuses[$threshold]['desc'] = self::SpellReplace($spell_tmp, WoW_Utils::ValidateSpellText($spell_tmp['Description_' . $tmp_locale]));
+                $itemSetBonuses[$threshold]['desc'] = self::SpellReplace($spell_tmp, WoW_Utils::ValidateSpellText($spell_tmp['m_description_' . $tmp_locale]));
                 $itemSetBonuses[$threshold]['desc'] = str_replace('&quot;', '"', $itemSetBonuses[$threshold]['desc']);
                 $itemSetBonuses[$threshold]['threshold'] = $threshold;
             }
@@ -513,6 +513,8 @@ Class WoW_Items {
      * @return   array
      **/
     public function SpellReplace($spell, $text) {
+        // [Cata: PH]
+        return $text;
         $letter = array('${','}');
         $values = array( '[',']');
         $text = str_replace($letter, $values, $text);
@@ -539,8 +541,8 @@ Class WoW_Items {
             $pos += strlen($result[0]);
             $op = $result[3];
             $oparg = $result[4];
-            $lookup = $result[5]? $result[5]:$spell['id'];
-            $var = $result[6] ? $result[6]:$result[7];
+            $lookup = $result[5] ? $result[5] : $spell['m_ID'];
+            $var = $result[6] ? $result[6] : $result[7];
             if(!$var) {
                 continue;
             }
@@ -555,11 +557,11 @@ Class WoW_Items {
             else {
                 $spellData = @$cacheSpellData[$lookup];
                 if($spellData == 0) {
-                    if($lookup == $spell['id']) {
+                    if($lookup == $spell['m_ID']) {
                         $cacheSpellData[$lookup] = self::GetSpellData($spell);
                     }
                     else {
-                        $cacheSpellData[$lookup] = self::GetSpellData(DB::WoW()->selectRow("SELECT * FROM `DBPREFIX_spell` WHERE `id`=%d", $lookup));
+                        $cacheSpellData[$lookup] = self::GetSpellData(DB::WoW()->selectRow("SELECT * FROM `DBPREFIX_spell` WHERE `m_ID`=%d", $lookup));
                     }
                     $spellData = @$cacheSpellData[$lookup];
                 }
@@ -592,6 +594,8 @@ Class WoW_Items {
      * @return   array
      **/
     public function GetSpellData($spell) {
+        // [Cata: PH]
+        return false;
         // Basepoints
         $s1 = abs($spell['EffectBasePoints_1'] + $spell['EffectBaseDice_1']);
         $s2 = abs($spell['EffectBasePoints_2'] + $spell['EffectBaseDice_2']);
@@ -843,7 +847,10 @@ Class WoW_Items {
         unset($icons, $icon);
         $size = sizeof($items);
         for($i = 0; $i < $size; ++$i) {
-            $items[$i]['icon'] = $new_icons[$items[$i]['displayid']];
+            if(!isset($items[$i])) {
+                continue;
+            }
+            $items[$i]['icon'] = isset($new_icons[$items[$i]['displayid']]) ? $new_icons[$items[$i]['displayid']] : 0;
             if(isset($new_names) && is_array($new_names)) {
                 if(isset($new_names[$items[$i]['entry']])) {
                     $items[$i]['name'] = $new_names[$items[$i]['entry']];

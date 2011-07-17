@@ -1018,7 +1018,7 @@ class WoW_StatSystem {
             return $ap * (1 + self::GetInt32Value(UNIT_FIELD_RANGED_ATTACK_POWER_MULTIPLIER));
         }
         else {
-            $ap = self::GetInt32Value(UNIT_FIELD_ATTACK_POWER) + self::GetInt32Value(UNIT_FIELD_ATTACK_POWER_MODS);
+            $ap = self::GetInt32Value(UNIT_FIELD_ATTACK_POWER) + self::GetInt32Value(UNIT_FIELD_ATTACK_POWER_MOD_POS);
             if($ap < 0) {
                 return 0.0;
             }
@@ -1479,7 +1479,7 @@ class WoW_StatSystem {
         self::SetInt32Value(UNIT_FIELD_MAXRANGEDDAMAGE, 0);
         
         self::SetInt32Value(UNIT_FIELD_ATTACK_POWER, 0);
-        self::SetInt32Value(UNIT_FIELD_ATTACK_POWER_MODS, 0);
+        self::SetInt32Value(UNIT_FIELD_ATTACK_POWER_MOD_POS, 0);
         self::SetInt32Value(UNIT_FIELD_ATTACK_POWER_MULTIPLIER, 0);
         self::SetInt32Value(UNIT_FIELD_RANGED_ATTACK_POWER, 0);
         self::SetInt32Value(UNIT_FIELD_RANGED_ATTACK_POWER_MODS, 0);

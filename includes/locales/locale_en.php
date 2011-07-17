@@ -378,6 +378,7 @@ $WoW_Locale = array(
     'template_item_stat_44' => 'Equip: Increases your armor penetration rating by <span>%d</span>',
     'template_item_stat_45' => 'Equip: Increases spell power by <span>%d</span>',
     'template_item_stat_46' => 'Equip: Increases your health regeneration by <span>%d</span>',
+    'template_item_stat_49' => 'Equip: Increases your mastery rating by <span>%d</span>',
     
     'template_stat_name_' . ITEM_MOD_MANA => 'Mana',
     'template_stat_name_' . ITEM_MOD_HEALTH => 'Health',

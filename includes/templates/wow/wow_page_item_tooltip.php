@@ -268,13 +268,13 @@ $ssv = WoW_Template::GetPageData('ssv');
             $equippedItemsCount = 0;
             $totalItemsCount = 0;
             $pieces_text = null;
-            $itemsetName = DB::WoW()->selectCell("SELECT `name_%s` FROM `DBPREFIX_itemsetinfo` WHERE `id` = %d", WoW_Locale::GetLocale(), $proto->itemset);
+            $itemsetName = DB::WoW()->selectCell("SELECT `name_%s` FROM `DBPREFIX_itemset` WHERE `id` = %d", WoW_Locale::GetLocale(), $proto->itemset);
             if(WoW_Items::IsMultiplyItemSet($proto->itemset)) {
                 $setdata = DB::WoW()->selectRow("SELECT * FROM `DBPREFIX_itemsetdata` WHERE `original` = %d AND (`item1` = %d OR `item2` = %d OR `item3` = %d OR `item4` = %d OR `item5` = %d)", $proto->itemset, $proto->entry, $proto->entry, $proto->entry, $proto->entry, $proto->entry);
                 $totalItemsCount = 5;
             }
             else {
-                $setdata = DB::WoW()->selectRow("SELECT * FROM `DBPREFIX_itemsetinfo` WHERE `id` = %d", $proto->itemset);
+                $setdata = DB::WoW()->selectRow("SELECT * FROM `DBPREFIX_itemset` WHERE `id` = %d", $proto->itemset);
                 for($i = 1; $i < 18; $i++) {
                     if($setdata['item' . $i] > 0) {
                         $totalItemsCount++;
@@ -310,7 +310,7 @@ $ssv = WoW_Template::GetPageData('ssv');
                     }
                 }
             }
-            $itemsetbonus = WoW_Items::GetItemSetBonusInfo(DB::WoW()->selectRow("SELECT * FROM `DBPREFIX_itemsetinfo` WHERE `id` = %d", $proto->itemset));
+            $itemsetbonus = WoW_Items::GetItemSetBonusInfo(DB::WoW()->selectRow("SELECT * FROM `DBPREFIX_itemset` WHERE `id` = %d", $proto->itemset));
             $setbonus_text = null;
             if(is_array($itemsetbonus)) {
                 foreach($itemsetbonus as $item_bonus) {

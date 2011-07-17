@@ -134,7 +134,7 @@ Class WoW_Item {
                 }
             }
             else {
-                $itemset = DB::WoW()->selectRow("SELECT * FROM `DBPREFIX_itemsetinfo` WHERE `id` = %d", $this->itemset_o);
+                $itemset = DB::WoW()->selectRow("SELECT * FROM `DBPREFIX_itemset` WHERE `id` = %d", $this->itemset_o);
                 if(is_array($itemset)) {
                     $this->itemset = $this->itemset_o;
                     for($i = 1; $i < 18; $i++) {

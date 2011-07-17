@@ -379,6 +379,7 @@ $WoW_Locale = array(
     'template_item_stat_44' => 'Если на персонаже: рейтинг пробивания брони +<span>%d</span>',
     'template_item_stat_45' => 'Если на персонаже: сила заклинаний +<span>%d</span>',
     'template_item_stat_46' => 'Если на персонаже: восстановление здоровья +<span>%d</span>',
+    'template_item_stat_49' => 'Если на персонаже: рейтинг искусности +<span>%d</span>',
     
     'template_stat_name_' . ITEM_MOD_MANA => 'Мана',
     'template_stat_name_' . ITEM_MOD_HEALTH => 'Здоровье',

@@ -2041,7 +2041,7 @@ Class WoW_Characters /*implements Interface_Characters*/ {
             $multipler += 1;
         }
         $base = self::GetDataField(UNIT_FIELD_ATTACK_POWER) * $multipler;
-        $effective = $base + (self::GetDataField(UNIT_FIELD_ATTACK_POWER_MODS) * $multipler);
+        $effective = $base + (self::GetDataField(UNIT_FIELD_ATTACK_POWER_MOD_POS) * $multipler);
         self::$stats_holder['melee']['attack_power'] = array(
             'base' => $base,
             'effective' => $effective,
@@ -2191,7 +2191,7 @@ Class WoW_Characters /*implements Interface_Characters*/ {
             $multipler += 1;
         }
         $effective = self::GetDataField(UNIT_FIELD_RANGED_ATTACK_POWER) * $multipler;
-        $buff = self::GetDataField(UNIT_FIELD_RANGED_ATTACK_POWER_MODS) * $multipler;
+        $buff = self::GetDataField(UNIT_FIELD_RANGED_ATTACK_POWER_MOD_POS) * $multipler;
         $multiple = WoW_Utils::GetFloatValue(self::GetDataField(UNIT_FIELD_RANGED_ATTACK_POWER_MULTIPLIER), 2);
         $posBuff = 0;
         $negBuff = 0;

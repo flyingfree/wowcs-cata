@@ -677,6 +677,7 @@ class WoW_Layout {
             case 'forum_category':
             case 'forum_thread':
             case 'forum_new_topic':
+            case 'forum_edit_post':
                 $css_data_page = array(
                     array(
                         'path' => WoW::GetWoWPath() . '/wow/static/local-common/css/cms/forums.css',

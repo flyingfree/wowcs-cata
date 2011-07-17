@@ -50,7 +50,7 @@
 <?php
 echo WoW_Paginator::Initialize(WoW_Template::GetPageData('current_page'), WoW_Forums::GetTotalThreadPosts(), 20, 'forum');
 ?>
-          <a class="ui-button button1<?php echo WoW_Forums::IsClosedThread() ? ' disabled' : null; ?>" href="<?php echo (WoW_Forums::IsClosedThread() || !WoW_Account::IsLoggedIn()) ? ' javascript:;' : '#new-post'; ?>"<?php echo !WoW_Account::IsLoggedIn() ? ' onclick="return Login.open(\'' . WoW::GetWoWPath() . '/login/login.frag\');"' : null; ?>>
+          <a class="ui-button button1<?php echo (WoW_Forums::IsClosedThread() || !WoW_Account::IsHaveActiveCharacter()) ? ' disabled' : null; ?>" href="<?php echo (WoW_Forums::IsClosedThread() || !WoW_Account::IsLoggedIn()) ? ' javascript:;' : '#new-post'; ?>"<?php echo !WoW_Account::IsLoggedIn() ? ' onclick="return Login.open(\'' . WoW::GetWoWPath() . '/login/login.frag\');"' : null; ?>>
         		<span>
         			<span><?php echo WoW_Locale::GetString('template_forum_add_reply');?></span>
         		</span>
@@ -61,9 +61,6 @@ echo WoW_Paginator::Initialize(WoW_Template::GetPageData('current_page'), WoW_Fo
       <div id="thread">
             <?php
             $posts = WoW_Forums::GetThreadPosts();
-            echo "<pre>";
-            //print_r($posts);
-            echo "</pre>";
             if(is_array($posts)) {
                 $post_num = 1;
                 foreach($posts as $post) {
@@ -82,67 +79,123 @@ echo WoW_Paginator::Initialize(WoW_Template::GetPageData('current_page'), WoW_Fo
                                                       <div class="guild"><a href="%s">%s</a></div>
                                                       <div class="achievements">--</div>',
                                                       $post['level'].' '.$post['race_text'].' '.$post['class_text'], $guild_url, $post['guildName']);
-                    echo sprintf('
-                    <div id="post-%d" class="post%s">
-					            <span id="%d"></span>
-                      <div class="post-interior">
-                        <table>
-                          <tr>
-                            <td class="post-character">
-                            	<div class="post-user">
-                            	  <div class="avatar avatar-interior">
-                                  <a href="%s">
-                                    <img height="84" src="/wow/static/images/2d/avatar/%d-%d.jpg" alt="" />
-                                  </a>
-                                </div>
-                                <div class="character-info">
-                                  <div class="user-name">
-                                		<span class="char-name-code" style="display: none">%s</span>
-                                  	<div id="context-1" class="ui-context"%s>
-                                  		<div class="context">
-                                  			<a href="javascript:;" class="close" onclick="return CharSelect.close(this);"></a>
-                                  			<div class="context-user"><strong>%s</strong><br>%s</div>
-                                  			<div class="context-links">
-                                  					%s
-                                  			</div>
-                                  		</div>
-	                                  </div>
-                                    <a href="%s" class="context-link%s" rel="np">%s</a>
+                    $post_options = sprintf('<a class="ui-button button2 " href="post/%d/edit"><span><span>%s</span></span></a>
+                                             <a class="ui-button button2 " href="javascript:;" onmouseover="Tooltip.show(this,\'%s\')" onclick="if(confirm(\'%s\')) $(\'#deletePost%d\').submit()"><span><span>%s</span></span></a>',
+                                              $post['post_id'], WoW_Locale::GetString('template_forum_post_edit'), WoW_Locale::GetString('template_forum_post_delete_tooltip'), WoW_Locale::GetString('template_forum_post_delete_confirm'), $post['post_id'], WoW_Locale::GetString('template_forum_post_delete'));
+                    $realms = WoW::GetRealmStatus($post['realmId']);
+                    if($post['deleted'] != NULL){
+                        echo sprintf('
+                        <div class="post  hidden">
+                          <form id="deletePost%d" action="post/%d/delete" method="POST">
+                            <input type="hidden" name="xstoken" value="85d0d8a6-90e2-4197-ac61-602be6f70e19" />
+                          </form>
+                          <span id="%d"></span> 
+                          <div class="deleted">
+                            <table>
+                              <tr>
+                                <td class="post-character">
+                                  <div class="character-info user-name-container">
+                                    <div class="user-name">
+                                      <span class="char-name-code" style="display: none">%s</span>
+                                      <div id="context-10" class="ui-context">
+                                        <div class="context">
+                                          <a href="javascript:;" class="close" onclick="return CharSelect.close(this);"></a>
+                                          <div class="context-user">
+                                            <strong>%s</strong><br />
+                                            <span class="realm %s">%s</span>
+                                          </div> 
+                                          <div class="context-links">%s</div>
+                                        </div>
+                                      </div>
+                                      <a href="%s" class="context-link%s" rel="np">%s</a>
+                                    </div>
                                   </div>
-                                  <div%s>
-                                    %s
+                                </td>
+                                <td>
+                                  <div class="post-detail">%s</div>
+                                </td>
+                                <td class="post-info">
+                                  <div class="post-info-int">
+                                    <div class="postData">
+                                      <span class="lowrated">%s</span>
+                                      <a href="#%d">#%d</a>
+                                      <div class="date">%s</div>
+                                    </div>
                                   </div>
-                                </div>
-	                             </div>
-							               </td>
-                             <td>
-                               <div class="post-edited">%s</div>
-                               <div class="post-detail">%s</div>
-                             </td>
-                             <td class="post-info">
-                               <div class="post-info-int">
-                                 <div class="postData">
-										               <a href="#%d">#%d</a>
-                                   <div class="date" data-tooltip="%s">%s</div>
-                                 </div>
-                                 %s
-                                 </div>
-                            </td>
-                          </tr>
-                        </table>
-                        <div class="post-options">
-                          <div class="respond"> 
-                            <a class="ui-button button2 " href="#new-post"><span><span>%s</span></span></a> 
-                            <a class="ui-button button2 " href="#new-post" onclick="Cms.Topic.quote(%d);"><span><span><span class="icon-quote">%s</span></span></span></a> 
+                                </td>
+                              </tr>
+                            </table>
                           </div>
-	                        <span class="clear"><!-- --></span>
-                        </div>
-                    	</div>
-                    </div>', $post['post_id'], $post['blizzpost'] ? ' blizzard' : null, $post_num, ($post['blizzpost'] ? 'javascript:;' : $character_url), $post['race'], $post['gender'], 
-                    $post['author'], $post['blizzpost'] ? ' style="display: none; "' : null, $post['author'], $post['guildName'], $character_links, $post['blizzpost'] ? 'javascript:;' : $character_url, 
-                    $post['blizzpost'] ? null : ' color-c'.$post['class'], $post['author'], $post['blizzpost'] ? ' class="blizzard-title"' : null, $post['blizzpost'] ? WoW_Locale::GetString('template_forum_blizz_title') : $character_description,
-                    $post['edit_date'] != null ? sprintf(WoW_Locale::GetString('template_forum_post_edited'), $post['author'], $post['formated_edit_date']) : null, $post['message'], 
-                    $post_num, $post_num, $post['fully_formated_date'], $post['formated_date'], $blizz_icon_link, WoW_Locale::GetString('template_blog_answer'), $post['post_id'], WoW_Locale::GetString('template_forum_post_quote'));
+                          <div class="post-interior low-rated"></div>
+                        </div>', 
+                        $post['post_id'], $post['post_id'], $post_num, $post['author'], $post['author'], $realms[0]['status'], $realms[0]['name'], $character_links,
+                        $character_url, $post['blizzpost'] ? null : ' color-c'.$post['class'], $post['author'], 
+                        sprintf(WoW_Locale::GetString('template_forum_post_deleted_by'), $post['author']), WoW_Locale::GetString('template_forum_post_deleted'), $post_num, $post_num, 'before time');
+                    }
+                    else{
+                        echo sprintf('
+                        <div id="post-%d" class="post%s">
+    					            <span id="%d"></span>
+                          <div class="post-interior">
+                            <table>
+                              <tr>
+                                <td class="post-character">
+                                	<div class="post-user">
+                                	  <div class="avatar avatar-interior">
+                                      <a href="%s">
+                                        <img height="84" src="/wow/static/images/2d/avatar/%d-%d.jpg" alt="" />
+                                      </a>
+                                    </div>
+                                    <div class="character-info">
+                                      <div class="user-name">
+                                    		<span class="char-name-code" style="display: none">%s</span>
+                                      	<div id="context-1" class="ui-context"%s>
+                                      		<div class="context">
+                                      			<a href="javascript:;" class="close" onclick="return CharSelect.close(this);"></a>
+                                      			<div class="context-user"><strong>%s</strong><br>%s</div>
+                                      			<div class="context-links">
+                                      					%s
+                                      			</div>
+                                      		</div>
+    	                                  </div>
+                                        <a href="%s" class="context-link%s" rel="np">%s</a>
+                                      </div>
+                                      <div%s>
+                                        %s
+                                      </div>
+                                    </div>
+    	                             </div>
+    							               </td>
+                                 <td>
+                                   <div class="post-edited">%s</div>
+                                   <div class="post-detail">%s</div>
+                                 </td>
+                                 <td class="post-info">
+                                   <div class="post-info-int">
+                                     <div class="postData">
+    										               <a href="#%d">#%d</a>
+                                       <div class="date" data-tooltip="%s">%s</div>
+                                     </div>
+                                     %s
+                                     </div>
+                                </td>
+                              </tr>
+                            </table>
+                            <div class="post-options">
+                              <div class="respond"> 
+                                %s
+                                <a class="ui-button button2 " href="#new-post"><span><span>%s</span></span></a> 
+                                <a class="ui-button button2 " href="#new-post" onclick="Cms.Topic.quote(%d);"><span><span><span class="icon-quote">%s</span></span></span></a> 
+                              </div>
+    	                        <span class="clear"><!-- --></span>
+                            </div>
+                        	</div>
+                        </div>', $post['post_id'], $post['blizzpost'] ? ' blizzard' : null, $post_num, ($post['blizzpost'] ? 'javascript:;' : $character_url), $post['race'], $post['gender'], 
+                        $post['author'], $post['blizzpost'] ? ' style="display: none; "' : null, $post['author'], $post['guildName'], $character_links, $post['blizzpost'] ? 'javascript:;' : $character_url, 
+                        $post['blizzpost'] ? null : ' color-c'.$post['class'], $post['author'], $post['blizzpost'] ? ' class="blizzard-title"' : null, $post['blizzpost'] ? WoW_Locale::GetString('template_forum_blizz_title') : $character_description,
+                        $post['edit_date'] != null ? sprintf(WoW_Locale::GetString('template_forum_post_edited'), $post['author'], $post['formated_edit_date']) : null, $post['message'], 
+                        $post_num, $post_num, $post['fully_formated_date'], $post['formated_date'], $blizz_icon_link, ($post['bn_id'] == WoW_Account::GetUserID()) ? $post_options : null , WoW_Locale::GetString('template_blog_answer'), $post['post_id'], WoW_Locale::GetString('template_forum_post_quote'));
+                    }
                 ++$post_num;
                 }
             }
@@ -170,8 +223,11 @@ if(WoW_Forums::IsClosedThread()) {
 elseif(!WoW_Account::IsLoggedIn()) {
     echo sprintf('<table class="dynamic-center "><tr><td><a class="ui-button button1 " href="?login" onclick="return Login.open(\'%s/login/login.frag\')"><span><span>%s</span></span></a></td></tr></table>', WoW::GetWoWPath(), WoW_Locale::GetString('template_forum_add_reply'));
 }
-else {
+elseif(WoW_Account::IsHaveActiveCharacter()) {
     WoW_Template::LoadTemplate('content_forum_new_post');
+}
+else {
+    echo sprintf('<table class="dynamic-center "><tr><td><div class="noCharacter"><p>%s</p></div></td></tr></table>', WoW_Locale::GetString('template_forum_need_char_to_post'));
 }
 ?>
 

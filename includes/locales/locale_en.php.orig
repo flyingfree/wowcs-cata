@@ -1736,13 +1736,6 @@ The Battle.net Account Team<br />
     'template_forum_preview' => 'Preview',
     'template_forum_submit' => 'Submit',
     'template_forum_create_thread' => 'Create Thread',
-    'template_forum_need_char_to_post' => 'You need a World of Warcraft character (created in-game) to post on the forums.',
-    'template_forum_post_delete_tooltip' => 'Posts may be deleted within 15 minutes of posting.',
-    'template_forum_post_edit' => 'Edit',
-    'template_forum_post_delete_confirm' => 'Are you sure you want to delete your post?',
-    'template_forum_post_delete' => 'Delete',
-    'template_forum_post_deleted_by' => 'Deleted by %s',
-    'template_forum_post_deleted' => 'Deleted',
-    'template_forum_post_edit_title' => 'Edit Post',
+    'template_forum_' => '',
 );
 ?>

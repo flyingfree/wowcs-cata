@@ -902,17 +902,21 @@ Class WoW_Account {
      * @return   bool
      **/
     public static function IsHaveActiveCharacter() {
-        if(!self::$characters_data && self::IsCharactersLoaded()) {
+        if(self::IsLoggedIn()) {
+            if(!self::$characters_data && self::IsCharactersLoaded()) {
+                return false;
+            }
+            elseif(!self::$characters_data && !self::IsCharactersLoaded()) {
+                self::LoadCharacters();
+            }
+            if(!self::$characters_data) {
+                return false;
+            }
+            return true;
+        }
+        else{
             return false;
         }
-        elseif(!self::$characters_data && !self::IsCharactersLoaded()) {
-            self::LoadCharacters();
-        }
-        if(!self::$characters_data) {
-            return false;
-        }
-
-        return true;
     }
     
     /**
@@ -1075,7 +1079,6 @@ Class WoW_Account {
             );
             if(!$active_set) {
                 self::$active_character = $char;
-                self::$active_forum_character = $char;
                 $active_set = true;
             }
             ++$index;

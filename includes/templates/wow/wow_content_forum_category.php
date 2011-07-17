@@ -28,7 +28,7 @@
           					$(function() { Input.bind('#forum-search-field'); });
           	//]]>
           	</script>
-          	<a class="ui-button button1 " href="topic"<?php echo !WoW_Account::IsLoggedIn() ? ' onclick="return Login.open(\'' . WoW::GetWoWPath() . '/login/login.frag\');"' : null; ?>>
+          	<a class="ui-button button1<?php echo (WoW_Account::IsLoggedIn() && !WoW_Account::IsHaveActiveCharacter()) ? ' disabled' : null; ?>" href="topic"<?php echo !WoW_Account::IsLoggedIn() ? ' onclick="return Login.open(\'' . WoW::GetWoWPath() . '/login/login.frag\');"' : null; ?>>
           		<span><span><?php echo WoW_Locale::GetString('template_forums_create_thread'); ?></span></span>
           	</a>
       	    <span class="clear"><!-- --></span>
@@ -52,9 +52,6 @@ echo WoW_Paginator::Initialize(WoW_Template::GetPageData('current_page'), WoW_Fo
     				</thead>
                 <?php
                 $threads = WoW_Forums::GetCategoryThreads(WoW_Template::GetPageData('current_page'));
-                //echo "<pre>";
-                //print_r($threads);
-                //echo "</pre>";exit;
                 if(is_array($threads)) {
                     $types = array(
                         'featured' => 'featured',
@@ -118,7 +115,7 @@ echo WoW_Paginator::Initialize(WoW_Template::GetPageData('current_page'), WoW_Fo
 <?php
 echo WoW_Paginator::Initialize(WoW_Template::GetPageData('current_page'), WoW_Forums::GetTotalCategoryThreads(), 20, 'forum');
 ?>
-          	  <a class="ui-button button1 " href="topic"<?php echo !WoW_Account::IsLoggedIn() ? ' onclick="return Login.open(\'' . WoW::GetWoWPath() . '/login/login.frag\');"' : null; ?>>
+          	  <a class="ui-button button1<?php echo (WoW_Account::IsLoggedIn() && !WoW_Account::IsHaveActiveCharacter()) ? ' disabled' : null; ?>" href="topic"<?php echo !WoW_Account::IsLoggedIn() ? ' onclick="return Login.open(\'' . WoW::GetWoWPath() . '/login/login.frag\');"' : null; ?>>
             		<span>
             			<span><?php echo WoW_Locale::GetString('template_forums_create_thread'); ?></span>
             		</span>

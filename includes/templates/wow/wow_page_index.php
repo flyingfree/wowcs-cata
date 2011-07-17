@@ -64,6 +64,9 @@ switch(WoW_Template::GetPageIndex()) {
     case 'game_class_index':
         WoW_Template::LoadTemplate('static_game_class_index');
         break;
+    case 'forum_edit_post':
+        WoW_Template::LoadTemplate('content_forum_edit_post');
+        break;
     default:
         WoW_Template::LoadTemplate('content_' . WoW_Template::GetPageIndex());
         break;

@@ -194,16 +194,16 @@ Class WoW_Forums {
         LEFT JOIN `DBPREFIX_user_characters` AS `b` 
           ON `b`.`bn_id` = `a`.`bn_id` AND `b`.`guid` = `a`.`character_guid`
         LEFT JOIN `DBPREFIX_forum_posts` AS `c`
-          ON `c`.`thread_id` = `a`.`thread_id` AND `c`.`post_id` = (SELECT `post_id` FROM `DBPREFIX_forum_posts` WHERE `thread_id` = `a`.`thread_id` ORDER BY `post_date` ASC LIMIT 1)
+          ON `c`.`thread_id` = `a`.`thread_id` AND `c`.`post_id` = (SELECT `post_id` FROM `DBPREFIX_forum_posts` WHERE `thread_id` = `a`.`thread_id` ORDER BY `post_date` DESC LIMIT 1)
         LEFT JOIN `DBPREFIX_forum_posts` AS `d`
-          ON `d`.`thread_id` = `a`.`thread_id` AND `d`.`post_id` = (SELECT `post_id` FROM `DBPREFIX_forum_posts` WHERE `thread_id` = `a`.`thread_id` ORDER BY `post_date` DESC LIMIT 1)
+          ON `d`.`thread_id` = `a`.`thread_id` AND `d`.`post_id` = (SELECT `post_id` FROM `DBPREFIX_forum_posts` WHERE `thread_id` = `a`.`thread_id` ORDER BY `post_date` ASC LIMIT 1)
         LEFT JOIN `DBPREFIX_user_characters` AS `e` 
           ON `e`.`bn_id` = `d`.`bn_id` AND `e`.`guid` = `d`.`character_guid`
         LEFT JOIN `DBPREFIX_forum_threads_reads` AS `f` 
-          ON `f`.`bn_id` = %d AND `f`.`thread_id` = `a`.`thread_id`
+          ON `f`.`bn_id` = `a`.`bn_id` AND `f`.`thread_id` = `a`.`thread_id`
         WHERE `a`.`cat_id` = %d
         ORDER BY `flags_order` DESC, `c`.`post_date` DESC
-        LIMIT %s%s", THREAD_FLAG_FEATURED, THREAD_FLAG_PINNED, WoW_Account::GetUserID(), self::GetCategoryId(), ($page > 0) ? (($page-1)*20).', ' : null, '20' );
+        LIMIT %s%s", THREAD_FLAG_FEATURED, THREAD_FLAG_PINNED, self::GetCategoryId(), ($page > 0) ? (($page-1)*20).', ' : null, '20' );
         self::HandleCategoryThreads();
     }
     
@@ -277,22 +277,13 @@ Class WoW_Forums {
           IF(@blizz = @tmp_row, IF(`a`.`blizzpost` = 1, @blizz+1, NULL), IF(`a`.`blizzpost` = 1, @blizz:=@tmp_row+1+(SELECT COUNT(*) FROM `DBPREFIX_forum_posts` WHERE `thread_id` = `a`.`thread_id` AND `cat_id` = `a`.`cat_id` AND `post_date` BETWEEN `a`.`post_date` AND (SELECT `post_date` FROM `DBPREFIX_forum_posts` WHERE `thread_id` = `a`.`thread_id` AND `cat_id` = `a`.`cat_id` AND `post_date` > `a`.`post_date` AND `blizzpost` = 1 LIMIT 1) AND `blizzpost` = 0), NULL)) AS `nextBlizzPost`
         
         FROM `DBPREFIX_forum_posts` AS `a`
-        LEFT JOIN `DBPREFIX_forum_threads` AS `b` ON `b`.`thread_id` = `a`.`thread_id`
-        LEFT JOIN `DBPREFIX_forum_category` AS `c` ON `c`.`cat_id` = `a`.`cat_id`
-        LEFT JOIN `DBPREFIX_user_characters` AS `d` ON `d`.`bn_id` = `a`.`bn_id` AND `d`.`guid` = `a`.`character_guid`
+        JOIN `DBPREFIX_forum_threads` AS `b` ON `b`.`thread_id` = `a`.`thread_id`
+        JOIN `DBPREFIX_forum_category` AS `c` ON `c`.`cat_id` = `a`.`cat_id`
+        JOIN `DBPREFIX_user_characters` AS `d` ON `d`.`bn_id` = `a`.`bn_id` AND `d`.`guid` = `a`.`character_guid`
         WHERE `a`.`thread_id` = %d
         ORDER BY `a`.`post_date` ASC
-        LIMIT %s%s", WoW_Locale::GetLocale(), self::GetThreadId(), ($page > 0) ? (($page-1)*20).', ' : null, '20');  
-        self::HandleThreadPosts();
+        LIMIT %s%s", WoW_Locale::GetLocale(), self::GetThreadId(), ($page > 0) ? (($page-1)*20).', ' : null, '20');       
         self::UpdateThreadViews();
-    }
-    
-    private static function HandleThreadPosts() {
-        foreach(self::$thread_posts as $post) {
-            $post['message'] = self::BBCodesToHTML($post['message']);
-            $posts[] = $post;
-        }
-        self::$thread_posts = $posts;
     }
     
     private static function LoadBlizzPosts($last, $page = 0) {
@@ -315,9 +306,9 @@ Class WoW_Forums {
         MINUTE(SUBTIME(NOW(), DATE_FORMAT(`a`.`post_date`, '%%H:%%i:%%s'))) AS `post_minutes`,
         (SELECT COUNT(*)+1 FROM `DBPREFIX_forum_posts` WHERE `post_id` < `a`.`post_id` AND`thread_id` = `a`.`thread_id` ORDER BY `a`.`post_date` ASC ) AS `ROW`
         FROM `DBPREFIX_forum_posts` AS `a`
-        LEFT JOIN `DBPREFIX_forum_threads` AS `b` ON `b`.`thread_id` = `a`.`thread_id`
-        LEFT JOIN `DBPREFIX_forum_category` AS `c` ON `c`.`cat_id` = `a`.`cat_id`
-        LEFT JOIN `DBPREFIX_user_characters` AS `d` ON `d`.`bn_id` = `a`.`bn_id` AND `d`.`guid` = `a`.`character_guid`
+        JOIN `DBPREFIX_forum_threads` AS `b` ON `b`.`thread_id` = `a`.`thread_id`
+        JOIN `DBPREFIX_forum_category` AS `c` ON `c`.`cat_id` = `a`.`cat_id`
+        JOIN `DBPREFIX_user_characters` AS `d` ON `d`.`bn_id` = `a`.`bn_id` AND `d`.`guid` = `a`.`character_guid`
         WHERE `a`.`blizzpost` = 1
         ORDER BY `a`.`post_date` DESC
         LIMIT %s%s", WoW_Locale::GetLocale(), ($page > 0) ? (($page-1)*15).', ' : null, $last ? '14' : '15' );       
@@ -352,8 +343,6 @@ Class WoW_Forums {
             else {
                 $post['message_short'] = $post['message'];
             }
-            $post['message_short'] = self::BBCodesToHTML($post['message_short']);
-            $post['message'] = self::BBCodesToHTML($post['message']);
             // Crop thread title
             if(mb_strlen($post['threadTitle']) > 28) {
                 $post['threadTitle_short'] = sprintf('%s…', mb_substr($post['threadTitle'], 0, 28));
@@ -496,7 +485,7 @@ Class WoW_Forums {
         `a`.*,
         `b`.`title_%s` AS `categoryTitle`
         FROM `DBPREFIX_forum_threads` AS `a`
-        LEFT JOIN `DBPREFIX_forum_category` AS `b` ON `b`.`cat_id` = `a`.`cat_id`
+        JOIN `DBPREFIX_forum_category` AS `b` ON `b`.`cat_id` = `a`.`cat_id`
         ORDER BY `a`.`views` DESC
         LIMIT 10", WoW_Locale::GetLocale());
     }
@@ -518,7 +507,7 @@ Class WoW_Forums {
         }
     }
     
-    public static function BBCodesToHTML($post_text) {
+    public static function BBCodesToHTML(&$post_text) {
         $matches = array();
         if(preg_match_all('/\[item\=(.+?)\/]/x', $post_text, $matches)) {
             $count = count($matches[0]);
@@ -536,7 +525,6 @@ Class WoW_Forums {
         // Replace other tags
         $post_text = str_replace(array('[', ']', "\n"), array('<', '>', '<br/>'), $post_text);
         $post_text = str_replace('"', '\"', $post_text);
-        return $post_text;
     }
     
     public static function AddNewThread($category_id, &$post_data, $return_id = false) {
@@ -554,9 +542,9 @@ Class WoW_Forums {
     }
     
     public static function AddNewPost($category_id, $thread_id, &$post_data) {
-        if(WoW_Account::IsHaveActiveCharacter()) {
+        if(WoW_Account::IsLoggedIn()) {
             $post_data['message'] = isset($post_data['postCommand_detail']) ? $post_data['postCommand_detail'] : $post_data['detail'];
-            //self::BBCodesToHTML($post_data['message']);
+            self::BBCodesToHTML($post_data['message']);
             if($category_id == null){
                 $category_id = DB::WoW()->selectCell("SELECT `cat_id` FROM `DBPREFIX_forum_threads` WHERE `thread_id` = %d LIMIT 1", $thread_id);
             }
@@ -619,36 +607,6 @@ Class WoW_Forums {
           ON `b`.`guid` = `a`.`character_guid`
         WHERE `a`.`post_id` = %d
         LIMIT 1", $post);
-    }
-    
-    public static function GetPost($post) {
-        if($post_to_edit = DB::WoW()->selectRow("SELECT `message`, `thread_id` FROM `DBPREFIX_forum_posts` WHERE `post_id` = %d AND `bn_id` = %d LIMIT 1", $post, WoW_Account::GetUserID())) {
-            return $post_to_edit;
-        }
-        else {
-            return false;
-        }
-    }
-    
-    public static function EditPost($post_id, &$post_data) {
-        if(WoW_Account::IsHaveActiveCharacter()) {
-            $post_data['message'] = isset($post_data['postCommand_detail']) ? $post_data['postCommand_detail'] : $post_data['detail'];
-            //self::BBCodesToHTML($post_data['message']);
-            $thread_id = DB::WoW()->selectCell("SELECT `thread_id` FROM `DBPREFIX_forum_posts` WHERE `post_id` = %d LIMIT 1", $post_id);
-
-            DB::WoW()->query("
-            UPDATE `DBPREFIX_forum_posts`
-            SET `character_guid` = %d,
-                `message` = '%s',
-                `edit_date` = NOW()
-            WHERE `post_id` = %d AND bn_id = %d",
-                WoW_Account::GetActiveCharacterInfo('guid'), $post_data['message'], $post_id, WoW_Account::GetUserID());
-            
-            return $thread_id;
-        }
-        else {
-            return false;
-        }
     }
 }
 ?>

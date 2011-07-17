@@ -360,14 +360,16 @@ Class WoW_Template {
                     2 => '/forum/#forum'.WoW_Forums::GetGlobalCategoryId(),
                     3 => '/forum/'.WoW_Forums::GetCategoryId().'/',
                     4 => '/forum/topic/'.WoW_Forums::GetThreadId().'/',
-                    5 => '/forum/blizztracker/'
+                    5 => '/forum/topic/post/'.@$url_data[4].'/edit',
+                    6 => '/forum/topic/post/'.@$url_data[4].'/delete',
+                    7 => '/forum/blizztracker/'
                 );
                 for($a = 0; $a < count($url_data); ++$a) {
                     $path_search_data[$a] = $_data[$a];
                 }
                 if(isset($url_data[2]) && $url_data[2] != '/topic/'){
                     if(isset($url_data[2]) && $url_data[2] == '/blizztracker/'){
-                        $path_search_data[2] = $_data[5];
+                        $path_search_data[2] = $_data[7];
                         $label[2] = WoW_Locale::GetString('template_blizztracker_title');
                         unset($path_search_data[3]);
                     }
@@ -376,9 +378,18 @@ Class WoW_Template {
                     }
                 }
                 if(isset($url_data[2]) && $url_data[2] == '/topic/') {
-                    $path_search_data[3] = $_data[3];
-                    $path_search_data[4] = $_data[4];
-                    $label[4] = WoW_Forums::GetThreadTitle();
+                    if($url_data[3] == '/post/'){
+                        $path_search_data[3] = $_data[3];
+                        $path_search_data[4] = $_data[5];
+                        $label[4] = WoW_Forums::GetThreadTitle();
+                        unset($path_search_data[5]);
+                        unset($path_search_data[6]);
+                    }
+                    else{
+                        $path_search_data[3] = $_data[3];
+                        $path_search_data[4] = $_data[4];
+                        $label[4] = WoW_Forums::GetThreadTitle();
+                    }
                 }
                 break;
             default:

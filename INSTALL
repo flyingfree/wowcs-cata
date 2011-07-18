@@ -22,10 +22,10 @@ INSTALLATION STEPS:
    You should edit these values according with your MySQL configs (host/user/password/DB name).
 6. Unzip htaccess.zip archive and place unpacked .htaccess file to root site dir for correct work.
 7. If there are some sql updates in 'sql/updates' dir (rev. {LATEST_REVISION} or higher), you need to upload it into DB, too.
-8. For full work you need to patch MaNGOS / TrinityCore core with "tools/{SERVER}/wowarmory_patch.patch" file
+8. For full work you need to patch MaNGOS / TrinityCore core with "tools/{SERVER}/wowcs_patch.patch" file
    and update your characters DB with provided SQL update (characters.sql - in the "tools/{SERVER}/sql" folder).
    
-   Use "patch -p1 < wowarmory_patch.patch" GIT command to patch server source code.
+   Use "patch -p1 < wowcs_patch.patch" GIT command to patch server source code.
    
 9. If you are using UNIX system, you need to manage access rights to allow script write data to '_debug' folder.
 10. If you have diffirent servers (MaNGOS and Trinity Core):
@@ -64,10 +64,10 @@ WARNING: if your site is not in site root, you NEED to set $WoW_Path variable in
 6. Распакуйте архив htaccess.zip и поместите распаковаенные файлы .htaccess file в корень  сайта.
 7. Если в папке 'sql/updates' есть какие-либо обновления, (ревизии {ПОСЛЕДНЯЯ_РЕВИЗИЯ} или выше), вам так же необходимо залить их в базу.
 8. Для полноценной работы нужно пропатчить исходные коды сервера MaNGOS / TrinityCore
-   и рекомпилировать сервер. Код патча находятся в файле "tools/{СЕРВЕР}/wowarmory_patch.patch".
+   и рекомпилировать сервер. Код патча находятся в файле "tools/{СЕРВЕР}/wowcs_patch.patch".
    так же, нужно обновить базу персонажей приведенными SQL-дампами *папка SQL*)
    
-   Используйте команду GIT "patch -p1 < wowarmory_patch.patch" для патчинга исходного кода сервера.
+   Используйте команду GIT "patch -p1 < wowcs_patch.patch" для патчинга исходного кода сервера.
    
 9. Если вы используете UNIX-систему, вам необходимо изменить права доступа к папке _debug чтобы скрипт мог записывать логи сервера.
 10. Если у вас несколько разных реалмов:

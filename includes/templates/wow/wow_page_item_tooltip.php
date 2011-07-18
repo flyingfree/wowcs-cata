@@ -14,7 +14,7 @@ $ssv = WoW_Template::GetPageData('ssv');
     <ul class="item-specs" style="margin: 0">
         <?php
         // Is binded to instance?
-        if($proto->Map > 0 && $mapName = DB::WoW()->selectCell("SELECT `name_%s` FROM `DBPREFIX_maps` WHERE `id` = %d", $proto->Map)) {
+        if($proto->Map > 0 && $mapName = DB::WoW()->selectCell("SELECT `name_%s` FROM `DBPREFIX_maps` WHERE `id` = %d", WoW_Locale::GetLocale(), $proto->Map)) {
             echo sprintf('<li>%s</li>', $mapName);
         }
         // Is heroic?
@@ -43,8 +43,8 @@ $ssv = WoW_Template::GetPageData('ssv');
         }
         if($proto->class == ITEM_CLASS_WEAPON) {
             // Weapon. Calculate damage and DPS.
-            $minDmg = $proto->Damage[0]['min'];
-            $maxDmg = $proto->Damage[0]['max'];
+            $minDmg = $proto->GetMinDamage();
+            $maxDmg = $proto->GetMaxDamage();
             $dps = 0;
             // SSV Check.
             if($ssv) {
@@ -54,20 +54,12 @@ $ssv = WoW_Template::GetPageData('ssv');
                     $maxDmg = 1.3 * $average;
                     $dps = round(($maxDmg + $minDmg) / (2 * ($proto->delay / 1000)));
                 }
+                else {
+                    $dps = $proto->getDPS();
+                }
             }
-            for($i = 0; $i <= 1; $i++) {
-                $d_type = $proto->Damage[$i]['type'];
-                $d_min  = $proto->Damage[$i]['min'];
-                $d_max  = $proto->Damage[$i]['max'];
-                if(($d_max > 0) && ($proto->class != ITEM_CLASS_PROJECTILE)) {
-                    $delay = $proto->delay / 1000;
-                    if($delay > 0) {
-                        $dps += round(($d_max + $d_min) / (2 * $delay), 1);
-                    }
-                    if($i > 1) {
-                        $delay = 0;
-                    }
-               	}
+            else {
+                $dps = $proto->getDPS();
             }
             echo sprintf('<li><span class="float-right">%s</span>%s</li><li>%s</li>',
                 sprintf(WoW_Locale::GetString('template_item_weapon_delay'), $proto->delay / 1000),
@@ -329,12 +321,15 @@ $ssv = WoW_Template::GetPageData('ssv');
         // Spells
         for($i = 0; $i <5; $i++) {
             if($proto->Spells[$i]['spellid'] > 0) {
-                $spell_tmp = DB::WoW()->selectRow("SELECT * FROM `DBPREFIX_spell` WHERE `id` = %d", $proto->Spells[$i]['spellid']);
+                $spell_tmp = DB::WoW()->selectRow("SELECT * FROM `DBPREFIX_spell` WHERE `m_ID` = %d", $proto->Spells[$i]['spellid']);
                 if(in_array(WoW_Locale::GetLocale(), array('ru', 'en'))) {
                     $tmp_locale = WoW_Locale::GetLocale();
                 }
                 else {
                     $tmp_locale = 'en';
+                }
+                if(!$spell_tmp || !isset($spell_tmp['Description_' . $tmp_locale])) {
+                    continue;//[ph]
                 }
                 $spellInfo = WoW_Items::SpellReplace($spell_tmp, WoW_Utils::ValidateSpellText($spell_tmp['Description_' . $tmp_locale]));
                 if($spellInfo) {

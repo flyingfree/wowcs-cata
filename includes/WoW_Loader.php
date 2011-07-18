@@ -87,6 +87,13 @@ function WoW_Autoload($className)
 {
     //prevent error when mailer classes are loaded
     if(!preg_match('/swift_(.*)/i', $className)) {
+        if(!preg_match('/WoW_(.*)/i', $className)) {
+            // Enums?
+            if(file_exists(CLASSES_DIR . 'enums' . DS . str_replace('Entry', null, $className) . '.php')) {
+                include(CLASSES_DIR . 'enums' . DS . str_replace('Entry', null, $className) . '.php');
+                return;
+            }
+        }
         $className = strtolower(str_replace('WoW_', null, $className));
         if(!file_exists(CLASSES_DIR . 'class.' . $className . '.php')) {
             die('<strong>Autoload Fatal Error:</strong> unable to autoload class ' . $className . '!');

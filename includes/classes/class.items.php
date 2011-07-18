@@ -561,7 +561,7 @@ Class WoW_Items {
                         $cacheSpellData[$lookup] = self::GetSpellData($spell);
                     }
                     else {
-                        $cacheSpellData[$lookup] = self::GetSpellData(DB::WoW()->selectRow("SELECT * FROM `DBPREFIX_spell` WHERE `m_ID`=%d", $lookup));
+                        $cacheSpellData[$lookup] = self::GetSpellData(DB::WoW()->selectRow("SELECT * FROM `DBPREFIX_spell_effect` WHERE `m_ID`=%d", $lookup));
                     }
                     $spellData = @$cacheSpellData[$lookup];
                 }
@@ -596,10 +596,9 @@ Class WoW_Items {
     public function GetSpellData($spell) {
         // [Cata: PH]
         return false;
-        // Basepoints
-        $s1 = abs($spell['EffectBasePoints_1'] + $spell['EffectBaseDice_1']);
-        $s2 = abs($spell['EffectBasePoints_2'] + $spell['EffectBaseDice_2']);
-        $s3 = abs($spell['EffectBasePoints_3'] + $spell['EffectBaseDice_3']);
+        $s1 = abs($spell['effectBasePoints_1'] + $spell['EffectBaseDice_1']);
+        $s2 = abs($spell['effectBasePoints_2'] + $spell['EffectBaseDice_2']);
+        $s3 = abs($spell['effectBasePoints_3'] + $spell['EffectBaseDice_3']);
         if($spell['EffectDieSides_1']>$spell['EffectBaseDice_1'] && ($spell['EffectDieSides_1']-$spell['EffectBaseDice_1'] != 1)) {
             $s1 .= ' - ' . abs($spell['EffectBasePoints_1'] + $spell['EffectDieSides_1']);
         }

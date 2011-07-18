@@ -173,6 +173,11 @@ Class WoW_ItemPrototype {
     private $loaded  = false;
     private $m_guid  = 0;
     private $m_owner = 0;
+    private $damage_info = array(
+        'dps' => 0.0,
+        'min' => 0,
+        'max' => 0
+    );
     
     public function LoadItem($item_entry, $itemGuid = 0, $ownerGuid = 0) {
         $item_row = DB::World()->selectRow("SELECT * FROM `item_template` WHERE `entry` = '%d' LIMIT 1", $item_entry);
@@ -197,17 +202,8 @@ Class WoW_ItemPrototype {
             if(isset($this->{'stat_type' . $key})) {
                 $this->ItemStat[$i] = array(
                     'type'  => $this->{'stat_type'  . $key},
-                    'value' => $this->{'stat_value' . $key});
-            }
-        }
-        // Item damages
-        for($i = 0; $i < MAX_ITEM_PROTO_DAMAGES+1; $i++) {
-            $key = $i+1;
-            if(isset($this->{'dmg_type' . $key})) {
-                $this->Damage[$i] = array(
-                    'type' => $this->{'dmg_type' . $key},
-                    'min'  => $this->{'dmg_min'  . $key},
-                    'max'  => $this->{'dmg_max'  . $key});
+                    'value' => $this->{'stat_value' . $key}
+                );
             }
         }
         // Item spells
@@ -273,14 +269,80 @@ Class WoW_ItemPrototype {
     }
     
     public function getDPS() {
-        if($this->delay == 0) {
-            return 0;
+        if($this->damage_info['dps'] > 0) {
+            return $this->damage_info['dps']; 
         }
-        $temp = 0;
-        for($i = 0; $i < MAX_ITEM_PROTO_DAMAGES; $i++) {
-            $temp += $this->Damage[$i]['min'] + $this->Damage[$i]['max'];
+        $id = $this->GetItemDamageEntry();
+        if($id) {
+            $this->damage_info['dps'] = round($id->Values[$this->Quality], 2);
+            return round($id->Values[$this->Quality], 2);
         }
-        return $temp * 500 / $this->delay;
+        return 0.0;
+    }
+    
+    public function GetMinDamage() {
+        return floor($this->getDPS() * ((float) $this->delay) / 1000 * 0.7 + 0.5);
+    }
+    
+    public function GetMaxDamage() {
+        return floor($this->getDPS() * ((float) $this->delay) / 1000 * 1.3 + 0.5);
+    }
+    
+    private function GetItemDamageEntry() {
+        if($this->class == ITEM_CLASS_WEAPON) {
+            if($this->Quality >= ITEM_QUALITY_HEIRLOOM) { // heirlooms have it's own dbc...
+                return null;
+            }
+            $id = null;
+            switch($this->InventoryType) {
+                case INVTYPE_WEAPON:
+                case INVTYPE_WEAPONMAINHAND:
+                case INVTYPE_WEAPONOFFHAND:
+                    if($this->Flags2 & ITEM_FLAGS2_CASTER_WEAPON) { // caster weapon flag
+                        $id = new ItemDamageEntry('ItemDamageOneHandCaster');
+                    }
+                    else {
+                        $id = new ItemDamageEntry('ItemDamageOneHand');
+                    }
+                    break;
+                case INVTYPE_2HWEAPON:
+                    if($this->Flags2 & ITEM_FLAGS2_CASTER_WEAPON) {
+                        $id = new ItemDamageEntry('ItemDamageTwoHandCaster');
+                    }
+                    else {
+                        $id = new ItemDamageEntry('ItemDamageTwoHand');
+                    }
+                    break;
+                case INVTYPE_AMMO:
+                    $id = new ItemDamageEntry('ItemDamageAmmo');
+                    break;
+                case INVTYPE_RANGED:
+                case INVTYPE_THROWN:
+                case INVTYPE_RANGEDRIGHT:
+                    switch($this->subclass) {
+                        case ITEM_SUBCLASS_WEAPON_BOW:
+                        case ITEM_SUBCLASS_WEAPON_GUN:
+                        case ITEM_SUBCLASS_WEAPON_CROSSBOW:
+                            $id = new ItemDamageEntry('ItemDamageRanged');
+                            break;
+                        case ITEM_SUBCLASS_WEAPON_THROWN:
+                            $id = new ItemDamageEntry('ItemDamageThrown');
+                            break;
+                        case ITEM_SUBCLASS_WEAPON_WAND:
+                            $id = new ItemDamageEntry('ItemDamageWand');
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            if(!$id || !$id->FindEntry($this->ItemLevel)) {
+                return false;
+            }
+            return $id;
+        }
     }
     
     // Not used now.

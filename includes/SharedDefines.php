@@ -694,6 +694,8 @@ define('ITEM_FLAGS_BOP_TRADEABLE', 0x80000000);
 define('ITEM_FLAGS2_HORDE_ONLY', 0x00000001); // drop in loot, sell by vendor and equipping only for horde
 define('ITEM_FLAGS2_ALLIANCE_ONLY', 0x00000002); // drop in loot, sell by vendor and equipping only for alliance
 define('ITEM_FLAGS2_EXT_COST_REQUIRES_GOLD', 0x00000004); // item cost include gold part in case extended cost use also
+define('ITEM_FLAGS2_NEED_ROLL_DISABLED', 0x00000100);
+define('ITEM_FLAGS2_CASTER_WEAPON', 0x00000200);
 
 /* Bonding Types */
 define('ITEM_BIND_PICK_UP', 1);

@@ -328,10 +328,10 @@ $ssv = WoW_Template::GetPageData('ssv');
                 else {
                     $tmp_locale = 'en';
                 }
-                if(!$spell_tmp || !isset($spell_tmp['Description_' . $tmp_locale])) {
+                if(!$spell_tmp || !isset($spell_tmp['m_description_' . $tmp_locale])) {
                     continue;//[ph]
                 }
-                $spellInfo = WoW_Items::SpellReplace($spell_tmp, WoW_Utils::ValidateSpellText($spell_tmp['Description_' . $tmp_locale]));
+                $spellInfo = WoW_Items::SpellReplace($spell_tmp, WoW_Utils::ValidateSpellText($spell_tmp['m_description_' . $tmp_locale]));
                 if($spellInfo) {
                     echo sprintf('<li class="color-q2">%s</li>', sprintf(WoW_Locale::GetString('template_item_spell_trigger_' . $proto->Spells[$i]['trigger']), $spellInfo));
                 }

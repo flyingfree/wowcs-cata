@@ -709,7 +709,7 @@ $WoW_Locale = array(
     'template_character_audit_unenchanted_items' => '<span class="number">%d</span> unenchanted items',
     'template_character_audit_empty_sockets' => '<span class="number">%d</span> empty sockets in <span class="tip">%d items</span>',
     'template_character_audit_nonop_armor' => '<span class="number">%d</span> non-optimal armour (not %s)',
-    'template_character_audit_missing_belt_buckle' => 'Missing <a href="' . WoW::GetWoWPath() . '/item/%d" class="color-q3">%s</a>',
+    'template_character_audit_missing_belt_buckle' => 'Missing <a href="' . WoW::GetWoWPath() . '/wow/ru/item/%d" class="color-q3">%s</a>',
     'template_character_audit_passed' => 'This character passed the audit!',
     'template_character_reforge' => 'Reforging',
     'template_character_reforge_none' => 'No items have been reforged.',

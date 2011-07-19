@@ -718,7 +718,7 @@ $WoW_Locale = array(
     'template_character_audit_unenchanted_items' => '<span class="number">%d</span> незачарованный предмет',
     'template_character_audit_empty_sockets' => '<span class="number">%d</span> пустые гнезда в <span class="tip">предметах «%d»</span>',
     'template_character_audit_nonop_armor' => '<span class="number">%d</span> предмет из неподходящего материала (не %s)',
-    'template_character_audit_missing_belt_buckle' => 'Не хватает: <a href="' . WoW::GetWoWPath() . '/item/%d" class="color-q3">%s</a>',
+    'template_character_audit_missing_belt_buckle' => 'Не хватает: <a href="' . WoW::GetWoWPath() . 'wow/ru/item/%d" class="color-q3">%s</a>',
     'template_character_audit_passed' => 'Этот персонаж прошел проверку!',
     'template_character_reforge' => 'Перековка',
     'template_character_reforge_none' => 'Ни один предмет не был перекован.',

@@ -30,7 +30,7 @@ class Search extends Controller {
         if(preg_match('/\@/', $searchQuery)) {
             $fast_access = explode('@', $searchQuery);
             if(isset($fast_access[0], $fast_access[1])) {
-                header('Location: ' . WoW::GetWoWPath() . '/wow/' . WoW_Locale::GetLocale() . 'character/' . trim($fast_access[1]) . '/' . trim($fast_access[0]) . '/');
+                header('Location: ' . WoW::GetWoWPath() . '/wow/' . WoW_Locale::GetLocale() . '/character/' . trim($fast_access[1]) . '/' . trim($fast_access[0]) . '/');
                 exit;
             }
         }

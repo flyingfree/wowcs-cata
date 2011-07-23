@@ -287,7 +287,7 @@ Class WoW_Template {
                 $subdata4 = '';
                 $data3 = '';
                 $count = 0;
-                $url_data[3] = urldecode($url_data[3]);
+                @$url_data[3] = @urldecode($url_data[3]);
                 if(isset($url_data[4])) {
                     if(in_array($url_data[4], array('/simple/', '/advanced/'))) {
                         $count = 2;

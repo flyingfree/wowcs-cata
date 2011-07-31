@@ -243,7 +243,7 @@ World of Warcraft
                 echo '<div class="boss-column-portrait">';
             }
             echo sprintf('<div class="boss-avatar">
-		<a href="%s/wow/zone/%s/%s">
+		<a href="%s/wow/%s/zone/%s/%s">
 			<span class="boss-portrait"
 				style="background-image: url(\'http://eu.media.blizzard.com/wow/renders/npcs/portrait/creature%d.jpg\');">
 			</span>
@@ -253,7 +253,7 @@ World of Warcraft
 				</div>
 			</span>
 		</a>
-	</div>', WoW::GetWoWPath(), $zone_info['zone_key'], $boss['key'], $boss['id'], $boss['name']);
+	</div>', WoW::GetWoWPath(), WoW_Locale::GetLocale(), $zone_info['zone_key'], $boss['key'], $boss['id'], $boss['name']);
             if($i == $limit) {
                 $divOpened = false;
                 echo '</div>';

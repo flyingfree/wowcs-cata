@@ -246,7 +246,7 @@ World of Warcraft
         '. sprintf(WoW_Locale::GetString('template_character_audit_empty_sockets'), $count_empty_sockets, count($audit[AUDIT_TYPE_EMPTY_SOCKET])) .'
         </li>', $empty_sockets_slots);
     }
-    if(isset($audit[AUDIT_TYPE_NONOPTIMAL_ARMOR]) && is_array($audit[AUDIT_TYPE_NONOPTIMAL_ARMOR])) {
+    if(isset($audit[AUDIT_TYPE_NONOPTIMAL_ARMOR]) && is_array($audit[AUDIT_TYPE_NONOPTIMAL_ARMOR]) && WoW_Characters::GetLevel() >= 40) {
         $nonop_armor_slots = '';
         $nonop_armor_slots_js_tpl = '"inappropriateArmorItems": {%s},';
         $nonop_armor_count = 0;
@@ -254,8 +254,8 @@ World of Warcraft
             ++$nonop_armor_count;
         }
         echo sprintf('<li data-slots="%d">
-        <span class="tip">' . sprintf(WoW_Locale::GetString('template_character_audit_nonop_armor', $nonop_armor_count, WoW_Utils::GetAppropriateItemClassForClassID(WoW_Characters::GetClassID()))) .  '</span>
-        </li>');
+        <span class="tip">%s</span>
+        </li>', $nonop_armor_count, sprintf(WoW_Locale::GetString('template_character_audit_nonop_armor'), $nonop_armor_count, WoW_Utils::GetAppropriateItemClassForClassID(WoW_Characters::GetClassID())));
     }
     if(isset($audit[AUDIT_TYPE_MISSING_BELT_BUCKLE]) && $audit[AUDIT_TYPE_MISSING_BELT_BUCKLE] == true) {
         echo sprintf('<li data-slots="5">%s</li>', sprintf(WoW_Locale::GetString('template_character_audit_missing_belt_buckle'), BELT_BUCKLE_ID, WoW_Items::GetItemName(BELT_BUCKLE_ID)));

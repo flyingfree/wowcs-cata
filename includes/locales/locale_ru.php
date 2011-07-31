@@ -379,7 +379,6 @@ $WoW_Locale = array(
     'template_item_stat_44' => 'Если на персонаже: рейтинг пробивания брони +<span>%d</span>',
     'template_item_stat_45' => 'Если на персонаже: сила заклинаний +<span>%d</span>',
     'template_item_stat_46' => 'Если на персонаже: восстановление здоровья +<span>%d</span>',
-    'template_item_stat_49' => 'Если на персонаже: рейтинг искусности +<span>%d</span>',
     
     'template_stat_name_' . ITEM_MOD_MANA => 'Мана',
     'template_stat_name_' . ITEM_MOD_HEALTH => 'Здоровье',
@@ -718,7 +717,7 @@ $WoW_Locale = array(
     'template_character_audit_unenchanted_items' => '<span class="number">%d</span> незачарованный предмет',
     'template_character_audit_empty_sockets' => '<span class="number">%d</span> пустые гнезда в <span class="tip">предметах «%d»</span>',
     'template_character_audit_nonop_armor' => '<span class="number">%d</span> предмет из неподходящего материала (не %s)',
-    'template_character_audit_missing_belt_buckle' => 'Не хватает: <a href="' . WoW::GetWoWPath() . 'wow/ru/item/%d" class="color-q3">%s</a>',
+    'template_character_audit_missing_belt_buckle' => 'Не хватает: <a href="' . WoW::GetWoWPath() . '/item/%d" class="color-q3">%s</a>',
     'template_character_audit_passed' => 'Этот персонаж прошел проверку!',
     'template_character_reforge' => 'Перековка',
     'template_character_reforge_none' => 'Ни один предмет не был перекован.',
@@ -1309,5 +1308,55 @@ $WoW_Locale = array(
     'template_rarity_1' => 'Обычное',
     'template_rarity_0' => 'Низкое',
     'template_no_results' => 'Нет результатов для отображения',
+    
+    'template_blizztracker_title' => 'Blizz Tracker: официальные сообщения Blizzard',
+    'template_blizztracker_jump_first' => 'Первое сообщение Blizzard',
+    'template_blizztracker_posted_before_days' => '%s дн., %s ч ago',
+    'template_blizztracker_posted_before_hours' => '%s ч, %s м ago',
+    'template_blizztracker_posted_before_minutes' => '%s м ago',
+    
+    'template_forum_thread_featured' => 'Прикрепленное сообщение',
+    'template_forum_thread_sticky' => 'Прикрепленное сообщение',
+    'template_forum_thread_closed' => 'Закрыто',
+    'template_forum_jump_last' => 'Перейти к последней прочитанной странице',
+    'template_forum_topic' => 'Тема',
+    'template_forum_jump_first_blizz' => 'Первое сообщение Blizzard',
+    'template_forum_jump_next_blizz' => 'Следующее сообщение Blizzard',
+    'template_forum_add_reply' => 'Разместить ответ',
+    'template_forum_topic_closed' => 'Тема закрытаю',
+    'template_forum_blizz_title' => 'Customer Service',
+    'template_forum_post_edited' => 'Отредактировано %s %s',
+    'template_forum_post_quote' => 'Размещено',
+    'template_forum_reply_thread' => 'Reply to Thread', // NRT
+    'template_forum_edit' => 'Редактировать',
+    'template_forum_preview' => 'Предпросмотр',
+    'template_forum_submit' => 'Отправить',
+    'template_forum_create_thread' => 'Создать тему',
+    'template_forum_need_char_to_post' => 'Для размещения сообщений, вам необходимо создать персонажа.', // NRT
+    'template_forum_post_delete_tooltip' => 'Сообщения могут быть удалены в течение 15 минут после размещения.', // NRT
+    'template_forum_post_edit' => 'Редактировать', // NRT
+    'template_forum_post_delete_confirm' => 'Вы уверены, что хотите удалить сообщение?', // NRT
+    'template_forum_post_delete' => 'Удалить', // NRT
+    'template_forum_post_deleted_by' => 'Удалено %s', // NRT
+    'template_forum_post_deleted' => 'Удалено', // NRT
+    'template_forum_post_edit_title' => 'Изменить сообщение', // NRT
+    
+    'template_boss_level' => 'Уровень',
+    'template_boss_boss_rank' => 'Босс',
+    'template_boss_elite_rank' => 'Элита',
+    'template_boss_health' => 'Здоровье',
+    'template_boss_type' => 'Тип',
+    'template_boss_type_1' => 'Животное',
+    'template_boss_type_2' => 'Дракон',
+    'template_boss_type_3' => 'Демон',
+    'template_boss_type_4' => 'Элементаль',
+    'template_boss_type_5' => 'Великан',
+    'template_boss_type_6' => 'Нежить',
+    'template_boss_type_7' => 'Гуманоид',
+    'template_boss_type_8' => 'Существо',
+    'template_boss_type_9' => 'Механизм',
+    'template_boss_type_10' => 'Не указано',
+    'template_boss_abilities' => 'Пример способностей',
+    'template_boss_no_abilities' => 'У этого НИП нет известных способностей.',
 );
 ?>

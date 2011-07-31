@@ -211,6 +211,15 @@ switch(WoW_Template::GetPageData('page')) {
         echo '<script type="text/javascript" src="' . WoW::GetWoWPath() . '/wow/static/local-common/js/utility/dynamic-menu.js?v21"></script>
 <script type="text/javascript" src="' . WoW::GetWoWPath() . '/wow/static/js/pvp/ladder.js?v11"></script>';
         break;
+    case 'boss':
+        echo '<script type="text/javascript" src="' . WoW::GetWoWPath() . '/wow/static/js/wiki/wiki.js?v14"></script>
+<script type="text/javascript" src="' . WoW::GetWoWPath() . '/wow/static/js/wiki/npc.js?v14"></script>
+<script type="text/javascript" src="' . WoW::GetWoWPath() . '/wow/static/local-common/js/utility/model-rotator.js?v27"></script>
+<script type="text/javascript" src="' . WoW::GetWoWPath() . '/wow/static/local-common/js/table.js?v27"></script>
+<script type="text/javascript" src="' . WoW::GetWoWPath() . '/wow/static/local-common/js/cms.js?v27"></script>
+<script type="text/javascript" src="' . WoW::GetWoWPath() . '/wow/static/local-common/js/filter.js?v27"></script>
+<script type="text/javascript" src="' . WoW::GetWoWPath() . '/wow/static/local-common/js/lightbox.js?v27"></script>';
+        break;
 }
 ?>
 

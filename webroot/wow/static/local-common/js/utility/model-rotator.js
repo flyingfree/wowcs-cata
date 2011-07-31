@@ -250,6 +250,7 @@ var ModelRotator = Class.extend({
 	 * Reset the viewer to defaults.
 	 */
 	reset: function() {
+
 		this.node.removeClass('load-fail can-drag');
 
 		this.stop();
@@ -270,9 +271,9 @@ var ModelRotator = Class.extend({
 	 * @param e
 	 */
 	rotate: function(e) {
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
+		if(e) {
+		e.stopPropagation();
+		e.preventDefault();
 		}
 
 		if (this.timer !== null) {
@@ -292,6 +293,17 @@ var ModelRotator = Class.extend({
 	setDragCallback: function(callback) {
 		if (Core.isCallback(callback))
 			this.config.dragCallback = callback;
+	},
+
+	setImage: function(src) {
+	
+		this.reset();
+		this.viewer.css({
+			backgroundPosition: '0 0',
+			backgroundImage: "url('" + src + "')"
+		});
+		this.verifyImage();
+	
 	},
 
 	/**
@@ -331,6 +343,12 @@ var ModelRotator = Class.extend({
 	 * Verify the image has loaded, else throw errors.
 	 */
 	verifyImage: function() {
+
+		// Only verify if an image is actually set
+		if((this.viewer[0].style.backgroundImage||'').indexOf('.jpg') == -1) {
+			return;
+		}
+
 		var self = this,
 			bgImg = new Image();
 

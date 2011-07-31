@@ -1143,6 +1143,45 @@ class WoW_Layout {
                     )
                 );
                 break;
+            case 'boss':
+                $css_data_page =array(
+                    array(
+                        'path' => WoW::GetWoWPath() . '/wow/static/css/wiki/wiki.css',
+                        'version' => 10,
+                        'browser' => false
+                    ),
+                    array(
+                        'path' => WoW::GetWoWPath() . '/wow/static/css/wiki/wiki-ie.css',
+                        'version' => 10,
+                        'browser' => 'IE'
+                    ),
+                    array(
+                        'path' => WoW::GetWoWPath() . '/wow/static/css/wiki/boss.css',
+                        'version' => 14,
+                        'browser' => false
+                    ),
+                    array(
+                        'path' => WoW::GetWoWPath() . '/wow/static/css/lightbox.css',
+                        'version' => 10,
+                        'browser' => false
+                    ),
+                    array(
+                        'path' => WoW::GetWoWPath() . '/wow/static/local-common/css/cms/comments.css',
+                        'version' => 20,
+                        'browser' => false
+                    ),
+                    array(
+                        'path' => WoW::GetWoWPath() . '/wow/static/css/cms.css',
+                        'version' => 10,
+                        'browser' => false,
+                    ),
+                    array(
+                        'path' => WoW::GetWoWPath() . '/wow/static/css/cms-ie6.css',
+                        'version' => 10,
+                        'browser' => 'IE 6',
+                    )
+                );
+                break;
             case 'pvp_arena':
             case 'pvp_arena_ladder':
                 $css_data_page = array(

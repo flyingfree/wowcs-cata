@@ -23,7 +23,7 @@ var Table = Class.extend({
 	 * Configuration.
 	 */
 	config: {},
-	reprocess: false,
+	lastSort: null,
 	lastSort: null,
 
 	/**
@@ -266,9 +266,7 @@ var Table = Class.extend({
 	 * @param filtered
 	 */
 	process: function(filtered) {
-		var result,
-			table = this.table,
-			source = (this.cached.length) ? this.cached : this.source,
+		var source = (this.cached.length) ? this.cached : this.source,
 			i = source.length - 1,
 			l = i,
 			k;
@@ -304,7 +302,7 @@ var Table = Class.extend({
 					add = true;
 
 					// Filter down the rows
-					if (config.filtering && this.filters.rules.length) {
+					if (config.filtering) {
 						if (!this._processFilters(row, source[k])) {
 							continue;
 						}
@@ -363,15 +361,12 @@ var Table = Class.extend({
 				this._updatePagination(page);
 			}
 
-			result = true;
-
 			// Append document fragment
 			this.table.find('tbody').html(fragment);
 			this.cached = cache;
 
 		// No rows? Show no results
 		} else {
-			result = false;
 			if (this.none !== null)
 				this.table.find('tbody').append(this.none);
 		}
@@ -527,45 +522,33 @@ var Table = Class.extend({
 		}
 
 		// Avoid descending sort since reverse() is faster
-		var data = (this.cached.length) ? this.cached : this.source;
-
 		if (this.reprocess || type !== 'reverse') {
-
+			TableStatic.column = column;
+			
 			// Numeric
 			if (method === 'numeric') {
-				data.sort(function(a, b) {
-					var x = a[0][column],
-						y = b[0][column];
-
-					return parseFloat(x) - parseFloat(y);
-				});
+				this.source.sort(TableStatic.sortNumeric);
+				this.cached.sort(TableStatic.sortNumeric);
 
 			// Date
 			} else if (method === 'date') {
-				var dateParse = Date.parse;
-
-				data.sort(function(a, b) {
-					var x = dateParse(a[0][column]),
-						y = dateParse(b[0][column]);
-
-					return parseFloat(x) - parseFloat(y);
-				});
+				this.source.sort(TableStatic.sortDate);
+				this.cached.sort(TableStatic.sortDate);
 
 			// Alphabetic
 			} else {
-				data.sort(function(a, b) {
-					var x = a[0][column],
-						y = b[0][column];
-
-					return ((x < y) ? -1 : ((x > y) ? 1 : 0));
-				});
+				this.source.sort(TableStatic.sortNatural);
+				this.cached.sort(TableStatic.sortNatural);
 			}
 
-			if (type === 'desc')
-				data.reverse();
-
+			if (type === 'desc') {
+				this.source.reverse();
+				this.cached.reverse();
+			}
+			
 		} else if (type === 'reverse') {
-			data.reverse();
+			this.source.reverse();
+			this.cached.reverse();
 		}
 
 		// Process rows
@@ -1014,6 +997,50 @@ var TableStatic = {
 	 */
 	endsWith: function(text, match) {
 		return (text.substr(-match.length) === match);
+	},
+
+	/**
+	 * The column to sort against.
+	 */
+	column: 0,
+
+	/**
+	 * Sort the data numerical.
+	 *
+	 * @param a
+	 * @param b
+	 */
+	sortNumeric: function(a, b) {
+		var x = a[0][TableStatic.column],
+			y = b[0][TableStatic.column];
+
+		return parseFloat(x) - parseFloat(y);
+	},
+
+	/**
+	 * Sort the data by date.
+	 *
+	 * @param a
+	 * @param b
+	 */
+	sortDate: function(a, b) {
+		var x = Date.parse(a[0][TableStatic.column]),
+			y = Date.parse(b[0][TableStatic.column]);
+
+		return parseFloat(x) - parseFloat(y);
+	},
+
+	/**
+	 * Sort the data natural.
+	 *
+	 * @param a
+	 * @param b
+	 */
+	sortNatural: function(a, b) {
+		var x = a[0][TableStatic.column],
+			y = b[0][TableStatic.column];
+
+		return ((x < y) ? -1 : ((x > y) ? 1 : 0));
 	}
 
-};
+}

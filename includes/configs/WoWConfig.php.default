@@ -35,17 +35,14 @@
  **/
 Class WoWConfig {
     public static $DefaultBGName     = 'Massive Network';
-    public static $UseCache          = false; // NYI
-    public static $CacheLifeTime     = 86400; // NYI
     public static $MinLevelToDisplay = 10;
     public static $MinLevelToSearch  = 0;
-    public static $EnableMaintenance = false; // NYI
     public static $UseLog            = true;
     public static $LogLevel          = 2;
-    public static $ConfigVersion     = '0101201101';
+    public static $ConfigVersion     = '3107201101';
     public static $CheckVersionType  = 'show';
-    public static $DefaultLocale     = 'ru';
-    public static $DefaultLocaleID   = 8;
+    public static $DefaultLocale     = 'en';
+    public static $DefaultLocaleID   = 0;
     public static $SkipBanned        = false;
     public static $WoW_Path          = ''; // Without slash at the end of path. If your site is in root directory, leave this empty.
                                            // For example: site is available at http://example.org/wowcs/
@@ -53,6 +50,7 @@ Class WoWConfig {
     public static $DefaultExpansion  = 2; // 0 - Classic, 1 - Burning Crusade, 2 - Wrath, 3 - Cataclysm
     public static $Maintenance       = false; // Disable site? true/false
     public static $TwitterAccount    = 'WowarmoryM'; // Twitter account name (displayed on maintenance page). Leave it blank if you don't use any.
+    public static $UseRealmsStatus   = false; // Try to detect realms statuses when building account's character list?
     
     /**
      * All available realms
@@ -61,6 +59,7 @@ Class WoWConfig {
      *      name - Realm Name
      *      type - Realm type (can be SERVER_MANGOS or SERVER_TRINITY, depends on your server core. Note that this is a constant!)
      * You can create unlimited realms
+	 * Warning! WoWConfig::$Realms array size MUST BE equal to DatabaseConfig::$world and DatabaseConfig::$characters size!
      **/
     public static $Realms = array(
         1 => array(

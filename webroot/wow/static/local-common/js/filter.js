@@ -31,15 +31,15 @@ var Filter = {
 			var hash = Core.getHash();
 
 			if (hash != 'reset') {
-				var params = hash.split('&'),
-					parts;
+			var params = hash.split('&'),
+				parts;
 
-				for (var i = 0, length = params.length; i < length; ++i) {
-					parts = params[i].split('=');
-					Filter.query[parts[0]] = decodeURIComponent(parts[1]);
-					total++;
-				}
+			for (var i = 0, length = params.length; i < length; ++i) {
+				parts = params[i].split('=');
+				Filter.query[parts[0]] = decodeURIComponent(parts[1]);
+				total++;
 			}
+		}
 		}
 
 		if (Core.isCallback(callback))

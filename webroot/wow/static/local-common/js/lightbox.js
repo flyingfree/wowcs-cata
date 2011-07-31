@@ -142,7 +142,9 @@ var Lightbox = {
         var currentFlashVars = {
             flvPath:   Flash.videoBase + video.flvPath,
             flvWidth:  video.width,
-            flvHeight: video.height
+            flvHeight:    video.height,
+            captionsPath:      "",
+            captionsDefaultOn: (Core.locale != "en-us" && Core.locale != "en-gb")
         };
 
         //add rating values
@@ -150,10 +152,26 @@ var Lightbox = {
             currentFlashVars = $.extend(Flash.defaultVideoFlashVars, currentFlashVars);
         }
 
-        //generate no cache string if needed
-        if (video.cachePlayer || false) {
+        //generate no cache
             var noCache = new Date();
             noCache = "?nocache=" + noCache.getTime();
+        
+        //add captions
+        if (typeof video.captionsPath != "undefined" && video.captionsPath != "") {
+            currentFlashVars.captionsPath = video.captionsPath;
+        } else {
+            delete currentFlashVars.captionsPath;
+        }
+
+        //change rating if needed
+        if (typeof video.customRating != "undefined" && video.customRating != "") {
+        	if (video.customRating.indexOf("NONE") > -1) {
+            	delete currentFlashVars.ratingPath;
+            } else {
+            	currentFlashVars.ratingPath = video.customRating;
+            }
+        } else {
+            currentFlashVars.ratingPath = Flash.ratingImage;
         }
 
         //create a target for the video
@@ -161,7 +179,7 @@ var Lightbox = {
         $("<div id='flash-target' />").appendTo(Lightbox.content);
 
 
-        swfobject.embedSWF(Flash.videoPlayer + (noCache || ""), "flash-target", video.width, video.height,
+        swfobject.embedSWF(Flash.videoPlayer + noCache, "flash-target", video.width, video.height,
                 Flash.requiredVersion, Flash.expressInstall, currentFlashVars, Flash.defaultVideoParams);
 
         Lightbox.setFrameDimensions(video.width, video.height);
@@ -339,6 +357,12 @@ var Lightbox = {
 
         //append to body at end to avoid any redraws
         Lightbox.anchor.appendTo("body");
+
+        if (Core.isIE("6")) {
+            /* toggle so IE will load images properly*/
+
+            Lightbox.content.show().hide();
+        }
 
     },
     /**

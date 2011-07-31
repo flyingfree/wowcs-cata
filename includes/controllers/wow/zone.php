@@ -25,18 +25,31 @@ class Zone extends Controller {
         WoW_Template::SetPageIndex('zones');
         WoW_Template::SetPageData('page', 'zones');
         $url_data = WoW::GetUrlData('zone');
-        if(isset($url_data['action2']) && $url_data['action2'] != null) {
-            echo "need to do zone bosses";
-            exit; // [PH]
+        if(isset($url_data['action3'])) {
+            exit;
         }
-        elseif(isset($url_data['action1']) && $url_data['action1'] != null) {
+        if(isset($url_data['action1']) && $url_data['action1'] != null) {
             // Try to find zone
             if(WoW_Game::IsZone($url_data['action1'])) {
-                WoW_Template::SetPageIndex('zone');
-                WoW_Template::SetPageData('page', 'zone');
                 WoW_Template::SetPageData('zoneKey', $url_data['action1']);
-                WoW_Game::LoadZone($url_data['action1']); // save in memory
-                WoW_Template::SetPageData('body_class', sprintf('%s zone-%s', WoW_Locale::GetLocale(LOCALE_DOUBLE), $url_data['action1']));
+                if(isset($url_data['action2']) && $url_data['action2'] != null) {
+                    if(in_array($url_data['action2'], array('loot', 'quests', 'quest-rewards', 'achievements', 'comments'))) {
+                        die('NYI');
+                    }
+                    if(WoW_Game::IsBoss($url_data['action2'])) {
+                        WoW_Template::SetPageIndex('boss');
+                        WoW_Template::SetPageData('page', 'boss');
+                        WoW_Template::SetPageData('bossKey', $url_data['action2']);
+                        WoW_Game::LoadBoss($url_data['action2']); // save in memory
+                        WoW_Template::SetPageData('body_class', sprintf('%s zone-%s boss-%s', WoW_Locale::GetLocale(LOCALE_DOUBLE), $url_data['action1'], $url_data['action2']));
+                    }
+                }
+                else {
+                    WoW_Template::SetPageIndex('zone');
+                    WoW_Template::SetPageData('page', 'zone');
+                    WoW_Game::LoadZone($url_data['action1']); // save in memory
+                    WoW_Template::SetPageData('body_class', sprintf('%s zone-%s', WoW_Locale::GetLocale(LOCALE_DOUBLE), $url_data['action1']));
+                }
             }
         }
         WoW_Template::SetMenuIndex('menu-game');

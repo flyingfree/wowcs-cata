@@ -27,6 +27,8 @@ Class WoW_Game {
     private static $m_classes = array();
     private static $m_race = array();
     
+    private static $m_boss = array();
+    
     public static function LoadZones() {
         self::$m_zones = DB::WoW()->select("SELECT
         `a`.`zone_id`,
@@ -63,6 +65,7 @@ Class WoW_Game {
         `a`.`zone_id`,
         `a`.`zone_key`,
         `a`.`name_%s` AS `name`,
+        `a`.`name_en` AS `nameOriginal`,
         `a`.`intro_%s` AS `intro`,
         `a`.`desc_%s` AS `desc`,
         `a`.`minLevel`,
@@ -213,30 +216,7 @@ Class WoW_Game {
         elseif(self::$m_zone['maxLevelExtra'] > self::$m_zone['maxLevel']) {
             self::$m_zone['heroic_level'] = self::$m_zone['maxLevelExtra'];
         }
-        if(is_array(self::$m_zone['bosses'])) {
-            $bossesCount = count(self::$m_zone['bosses']);
-            $ids = array();
-            $bosses = self::$m_zone['bosses'];
-            for($i = 0; $i < $bossesCount; ++$i) {
-                if($bosses[$i]['name_id'] > 0) {
-                    $bosses[$i]['id'] = $bosses[$i]['name_id'];
-                }
-                if($bosses[$i]['idExtra'] > 0) {
-                    $bosses[$i]['id'] = $bosses[$i]['idExtra'];
-                }
-                unset($bosses[$i]['name_id'], $bosses[$i]['idExtra']);
-                if(in_array($bosses[$i]['id'], $ids)) {
-                    continue;
-                }
-                $ids[] = $bosses[$i]['id'];
-                $bosses[$i]['nameOriginal'] = strtolower($bosses[$i]['nameOriginal']);
-                $bosses[$i]['nameOriginal'] = str_replace(array(' ', '\''), array('-', ''), $bosses[$i]['nameOriginal']);
-                $bosses[$i]['key'] = $bosses[$i]['nameOriginal'];
-                unset($bosses[$i]['nameOriginal']);
-            }
-            self::$m_zone['bosses'] = $bosses;
-            unset($bosses);
-        }
+        
         if(self::$m_zone['floorLevelsCount'] > 0 && self::$m_zone['floorLevels'] != null) {
             $zone_floors = explode('|', self::$m_zone['floorLevels']);
             if($zone_floors) {
@@ -254,7 +234,47 @@ Class WoW_Game {
         if(!is_array(self::$m_zone)) {
             return false;
         }
-        self::$m_zone['bosses'] = DB::WoW()->select("SELECT `id`, `name_id`, `name_%s` AS `name`, `name_en` AS `nameOriginal`, `idExtra` FROM `DBPREFIX_instance_data` WHERE `instance_id` = %d", WoW_Locale::GetLocale(), self::$m_zone['zone_id']);
+        //self::$m_zone['bosses'] = DB::WoW()->select("SELECT `id`, `name_id`, `name_%s` AS `name`, `name_en` AS `nameOriginal`, `idExtra` FROM `DBPREFIX_instance_data` WHERE `instance_id` = %d", WoW_Locale::GetLocale(), self::$m_zone['zone_id']);
+        //return true;
+        self::$m_zone['bosses'] = DB::WoW()->select("
+        SELECT
+        `a`.`boss_id` AS `id`,
+        `a`.`instance_id`,
+        `a`.`key`,
+        `a`.`name_en` AS `nameOriginal`,
+        `a`.`name_%s` AS `name`,
+        `a`.`subname_en` AS `subNameOriginal`,
+        `a`.`subname_%s` AS `subName`,
+        `a`.`description_en` AS `descriptionOriginal`,
+        `a`.`description_%s` AS `description`,
+        `a`.`level`,
+        `a`.`flags`,
+        `a`.`health_n`,
+        `a`.`health_h`,
+        `a`.`type`
+        FROM `DBPREFIX_instance_bosses` AS `a`
+        WHERE `a`.`instance_id` = %d", WoW_Locale::GetLocale(), WoW_Locale::GetLocale(), WoW_Locale::GetLocale(), self::$m_zone['zone_id']);
+        self::HandleZoneBosses();
+    }
+    
+    private static function LoadZoneBossesAbilitites() {
+        
+    }
+    
+    private static function HandleZoneBosses() {
+        if(!self::$m_zone['bosses']) {
+            return false;
+        }
+        $fields = array('name', 'subName', 'description');
+        foreach(self::$m_zone['bosses'] as &$boss) {
+            foreach($fields as $field) {
+                if($boss[$field] == null && $boss[$field . 'Original'] != null) {
+                    $boss[$field] = $boss[$field . 'Original'];
+                }
+                unset($boss[$field . 'Original']);
+            }
+        }
+        return true;
     }
     
     public static function GetZones() {
@@ -269,6 +289,13 @@ Class WoW_Game {
             self::LoadZone(WoW_Template::GetPageData('zoneKey'));
         }
         return self::$m_zone;
+    }
+    
+    public static function GetBoss() {
+        if(!self::$m_boss) {
+            self::LoadBoss(WoW_Template::GetPageData('bossKey'));
+        }
+        return self::$m_boss;
     }
     
     public static function LoadClass($class_id) {
@@ -338,6 +365,62 @@ Class WoW_Game {
             }
         }
         return 0;
+    }
+    
+    public static function LoadBoss($boss_key) {
+        self::$m_boss = DB::WoW()->selectRow("
+        SELECT
+        `a`.`boss_id` AS `id`,
+        `a`.`instance_id`,
+        `a`.`key`,
+        `a`.`name_en` AS `nameOriginal`,
+        `a`.`name_%s` AS `name`,
+        `a`.`subname_en` AS `subNameOriginal`,
+        `a`.`subname_%s` AS `subName`,
+        `a`.`description_en` AS `descriptionOriginal`,
+        `a`.`description_%s` AS `description`,
+        `a`.`level`,
+        `a`.`flags`,
+        `a`.`health_n`,
+        `a`.`health_h`,
+        `a`.`type`,
+        `b`.`zone_key`,
+        `b`.`name_%s` AS `zoneName`,
+        `b`.`name_en` AS `zoneNameOriginal`
+        FROM `DBPREFIX_instance_bosses` AS `a`
+        LEFT JOIN `DBPREFIX_instances` AS `b` ON `b`.`zone_id` = `a`.`instance_id`
+        WHERE `key` = '%s' LIMIT 1", WoW_Locale::GetLocale(), WoW_Locale::GetLocale(), WoW_Locale::GetLocale(), WoW_Locale::GetLocale(), $boss_key);
+        self::$m_boss['abilities']  = DB::WoW()->select("SELECT `name_%s` AS `name`, `name_en` AS `nameOriginal`, `description_%s` AS `description`, `description_en` AS `descriptionOriginal`, `icon` FROM `DBPREFIX_bosses_abilities` WHERE `boss_id` = %d", WoW_Locale::GetLocale(), WoW_Locale::GetLocale(), self::$m_boss['id']);
+        self::HandleBoss();
+    }
+    
+    public static function IsBoss($key) {
+        return DB::WoW()->selectCell("SELECT 1 FROM `DBPREFIX_instance_bosses` WHERE `key` = '%s' LIMIT 1", $key);
+    }
+    
+    private static function HandleBoss() {
+        if(!self::$m_boss) {
+            return false;
+        }
+        $fields = array('name', 'subName', 'description', 'zoneName');
+        foreach($fields as $field) {
+            if(self::$m_boss[$field] == null && self::$m_boss[$field . 'Original'] != null) {
+                self::$m_boss[$field] = self::$m_boss[$field . 'Original'];
+            }
+            unset(self::$m_boss[$field . 'Original']);
+        }
+        if(self::$m_boss['abilities']) {
+            $fields = array('name', 'description');
+            foreach(self::$m_boss['abilities'] as &$ability) {
+                foreach($fields as $field) {
+                    if($ability[$field] == null && $ability[$field . 'Original'] != null) {
+                        $ability[$field] = $ability[$field . 'Original'];
+                    }
+                    unset($ability[$field . 'Original']);
+                }
+            }
+        }
+        return true;
     }
 }
 ?>

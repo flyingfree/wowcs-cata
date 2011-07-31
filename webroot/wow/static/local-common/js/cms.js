@@ -562,8 +562,8 @@ var Cms = {
 					dataType: 'json',
 					success: callback
 				});
-		}
-	},
+			}
+		},
 		deleteComment: function(id, notice) {
 			if (!confirm(notice))
 				return;
@@ -585,6 +585,7 @@ var Cms = {
 			});
 		}
 	},
+		
 	Blog: {
 		init : function(){
 			$('#blog a.lightbox').click(function(){

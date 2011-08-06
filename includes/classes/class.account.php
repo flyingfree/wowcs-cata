@@ -1040,6 +1040,11 @@ Class WoW_Account {
                 
                 // Rebuild character url
                 self::$characters_data[$i]['url'] = sprintf('%s/wow/%s/character/%s/%s/', WoW::GetWoWPath(), WoW_Locale::GetLocale(), self::$characters_data[$i]['realmName'], self::$characters_data[$i]['name']);
+                
+                // Realm status
+                $status = WoW::GetRealmStatus(self::$characters_data[$i]['realmId']);
+                self::$characters_data[$i]['realmStatus'] = isset($status[0], $status[0]['status']) ? $status[0]['status'] : 'down';
+
                 if(self::$characters_data[$i]['isActive']) {
                     self::$active_character = self::$characters_data[$i];
                 }
@@ -1151,7 +1156,8 @@ Class WoW_Account {
                     'guildId' => $char['guildId'],
                     'guildName' => $char['guildName'],
                     'guildUrl' => sprintf('%s/wow/%s/guild/%s/%s/', WoW::GetWoWPath(), WoW_Locale::GetLocale(), urlencode($realm_info['name']), urlencode($char['guildName'])),
-                    'url' => sprintf('%s/wow/%s/character/%s/%s/', WoW::GetWoWPath(), WoW_Locale::GetLocale(), urlencode($realm_info['name']), urlencode($char['name']))
+                    'url' => sprintf('%s/wow/%s/character/%s/%s/', WoW::GetWoWPath(), WoW_Locale::GetLocale(), urlencode($realm_info['name']), urlencode($char['name'])),
+                    'realmStatus' => isset($status[0], $status[0]['status']) ? $status[0]['status'] : 'down'
                 );
                 self::$characters_data[] = $tmp_char_data;
                 ++$index;

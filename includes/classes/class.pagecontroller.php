@@ -119,7 +119,7 @@ Class PageController {
             }
             $newUrl .= $url_piece . '/';
         }
-        return $newUrl;
+        return substr($newUrl, 0, (strlen($newUrl) - 1));
     }
     
     private function ParseURL() {

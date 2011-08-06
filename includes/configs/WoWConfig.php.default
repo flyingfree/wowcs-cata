@@ -17,29 +17,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  **/
- 
-/**
- * How works *.local config files?
- *  
- * There is two same config files for Database and WoWCS with only one difference:
- * In *.local.php set your configuration for your localhost server where you are testing
- * your changes. In files without .local suffix set your configuration to your public server.
- * This is usefull if your configurations as dblogin, dbpass, dbname, etc.. are different
- * on your test and public servers. All 4 files (DatabaseConfig.php, DatabaseConfig.local.php,
- * WoWConfig.php and WoWConfig.local.php) can exists on both your servers configuration dirs,
- * but for property works there is one file which must be created only in public server
- * configuration dir. This file name is ".public" and it is not included.
- * 
- * IMPORTANT:
- * 1) create file named ".public" in "WOW_DIRECTORY./includes/configs/" ONLY in your public server, NOT in localhost
- **/
+
 Class WoWConfig {
     public static $DefaultBGName     = 'Massive Network';
     public static $MinLevelToDisplay = 10;
     public static $MinLevelToSearch  = 0;
     public static $UseLog            = true;
     public static $LogLevel          = 2;
-    public static $ConfigVersion     = '3107201101';
+    public static $ConfigVersion     = '0608201101';
     public static $CheckVersionType  = 'show';
     public static $DefaultLocale     = 'en';
     public static $DefaultLocaleID   = 0;
@@ -49,8 +34,9 @@ Class WoWConfig {
                                            // That means that you should set this variable as '/wowcs'.
     public static $DefaultExpansion  = 2; // 0 - Classic, 1 - Burning Crusade, 2 - Wrath, 3 - Cataclysm
     public static $Maintenance       = false; // Disable site? true/false
-    public static $TwitterAccount    = 'WowarmoryM'; // Twitter account name (displayed on maintenance page). Leave it blank if you don't use any.
+    public static $TwitterAccount    = 'wowcsM'; // Twitter account name (displayed on maintenance page). Leave it blank if you don't use any.
     public static $UseRealmsStatus   = false; // Try to detect realms statuses when building account's character list?
+    public static $EnableBNPage      = true; // Enable Battle.net page (true - page will be displayed, false - you will be redirected to WoW portal)
     
     /**
      * All available realms
@@ -59,7 +45,7 @@ Class WoWConfig {
      *      name - Realm Name
      *      type - Realm type (can be SERVER_MANGOS or SERVER_TRINITY, depends on your server core. Note that this is a constant!)
      * You can create unlimited realms
-	 * Warning! WoWConfig::$Realms array size MUST BE equal to DatabaseConfig::$world and DatabaseConfig::$characters size!
+	 * Warning! WoWConfig::$Realms array size MUST BE equal to DatabaseConfig::$world's and DatabaseConfig::$characters' size!
      **/
     public static $Realms = array(
         1 => array(

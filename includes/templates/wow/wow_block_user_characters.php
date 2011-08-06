@@ -6,10 +6,11 @@
 								<span class="pin"></span>
 								<span class="name">%s</span>
 								<span class="class color-c%d">%d %s %s</span>
-								<span class="realm up">%s</span>
+								<span class="realm %s">%s</span>
 						</a>', WoW_Account::GetActiveCharacterInfo('name'),
                         WoW_Account::GetActiveCharacterInfo('class'),
                         WoW_Account::GetActiveCharacterInfo('level'), WoW_Account::GetActiveCharacterInfo('race_text'), WoW_Account::GetActiveCharacterInfo('class_text'),
+                        WoW_Account::GetActiveCharacterInfo('realmStatus'),
                         WoW_Account::GetActiveCharacterInfo('realmName'));
                         $characters = WoW_Account::GetCharactersData();
                         if(is_array($characters)) {
@@ -21,7 +22,7 @@
                                 <span class="pin"></span>
 								<span class="name">%s</span>
 								<span class="class color-c%d">%d %s %s</span>
-								<span class="realm up">%s</span></a>', $char['url'], $char['index'], $char['name'], $char['class'], $char['level'], $char['race_text'], $char['class_text'], $char['realmName']);
+								<span class="realm %s">%s</span></a>', $char['url'], $char['index'], $char['name'], $char['class'], $char['level'], $char['race_text'], $char['class_text'], $char['realmStatus'] $char['realmName']);
                             }
                         }
                         ?>

@@ -21,6 +21,9 @@
 class Home extends Controller {
     
     public function main() {
+        if(!WoWConfig::$EnableBNPage && !isset($_GET['skipRedirect'])) {
+            WoW::RedirectTo('wow/' . WoW_Locale::GetLocale());
+        }
         WoW_Template::SetTemplateTheme('bn');
         WoW_Template::SetMenuIndex('index');
         WoW_Account::UserGames();

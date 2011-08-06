@@ -22,7 +22,7 @@ data-tooltip-options=\'{"location": "topCenter"}\'>
 <div class="context-user">
 <strong><?php echo WoW_Account::GetActiveCharacterInfo('name'); ?></strong>
 <br />
-<span class="realm up"><?php echo WoW_Account::GetActiveCharacterInfo('realmName'); ?></span>
+<span class="realm <?php echo WoW_Account::GetActiveCharacterInfo('realmStatus'); ?>"><?php echo WoW_Account::GetActiveCharacterInfo('realmName'); ?></span>
 </div>
 <div class="context-links">
 <a href="<?php echo WoW_Account::GetActiveCharacterInfo('url'); ?>" title="<?php echo WoW_Locale::GetString('template_profile_caption'); ?>" rel="np" class="icon-profile link-first">
@@ -42,8 +42,8 @@ rel="np">
 <span class="pin"></span>
 <span class="name">%s</span>
 <span class="class color-c%d">%d %s %s</span>
-<span class="realm">%s</span>
-</a>', WoW_Account::GetActiveCharacterInfo('name'), WoW_Account::GetActiveCharacterInfo('class'), WoW_Account::GetActiveCharacterInfo('level'), WoW_Account::GetActiveCharacterInfo('race_text'), WoW_Account::GetActiveCharacterInfo('class_text'), WoW_Account::GetActiveCharacterInfo('realmName'));
+<span class="realm %s">%s</span>
+</a>', WoW_Account::GetActiveCharacterInfo('name'), WoW_Account::GetActiveCharacterInfo('class'), WoW_Account::GetActiveCharacterInfo('level'), WoW_Account::GetActiveCharacterInfo('race_text'), WoW_Account::GetActiveCharacterInfo('class_text'), WoW_Account::GetActiveCharacterInfo('realmStatus'), WoW_Account::GetActiveCharacterInfo('realmName'));
 
 $all_characters = WoW_Account::GetCharactersData();
 if(is_array($all_characters)) {
@@ -51,7 +51,7 @@ if(is_array($all_characters)) {
         if($char['guid'] == WoW_Account::GetActiveCharacterInfo('guid') && $char['realmId'] == WoW_Account::GetActiveCharacterInfo('realmId')) {
             continue; // Skip active character
         }
-        echo sprintf('<a href="%s" onclick="CharSelect.pin(%d, this); return false;" class="char "rel="np"><span class="pin"></span><span class="name">%s</span><span class="class color-c%d">%d %s %s</span><span class="realm">%s</span></a>', $char['url'], $char['index'], $char['name'], $char['class'], $char['level'], $char['race_text'], $char['class_text'], $char['realmName']);
+        echo sprintf('<a href="%s" onclick="CharSelect.pin(%d, this); return false;" class="char "rel="np"><span class="pin"></span><span class="name">%s</span><span class="class color-c%d">%d %s %s</span><span class="realm %s">%s</span></a>', $char['url'], $char['index'], $char['name'], $char['class'], $char['level'], $char['race_text'], $char['class_text'], $char['realmStatus'], $char['realmName']);
     }
 }
 ?>

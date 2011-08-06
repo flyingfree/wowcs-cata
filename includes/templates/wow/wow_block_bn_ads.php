@@ -5,7 +5,7 @@
 
 		<div class="promo promo-wow">
 			<a href="<?php echo WoW::GetWoWPath(); ?>/account/landing.xml" class="free-trial png-fix" data-ad="Classic: Trial">
-				<img src="<?php echo WoW::GetWoWPath(); ?>/wow/static/images/sidebar/free-trial/<?php echo WoW_Locale::GetLocale(LOCALE_DOUBLE); ?>.png" alt="Загрузите бесплатную пробную версию" />
+				<img src="<?php echo WoW::GetWoWPath(); ?>/wow/static/images/sidebar/free-trial/<?php echo WoW_Locale::GetLocale(LOCALE_DOUBLE); ?>.png" alt="" />
 			</a>
 
 			<span class="buy-now">

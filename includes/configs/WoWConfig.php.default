@@ -19,12 +19,14 @@
  **/
 
 Class WoWConfig {
+    public static $UseCache          = false;
+    public static $CacheLifeTime     = 86400; // In seconds
     public static $DefaultBGName     = 'Massive Network';
     public static $MinLevelToDisplay = 10;
     public static $MinLevelToSearch  = 0;
     public static $UseLog            = true;
     public static $LogLevel          = 2;
-    public static $ConfigVersion     = '0608201101';
+    public static $ConfigVersion     = '0808201101';
     public static $CheckVersionType  = 'show';
     public static $DefaultLocale     = 'en';
     public static $DefaultLocaleID   = 0;

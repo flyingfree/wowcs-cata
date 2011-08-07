@@ -41,6 +41,7 @@ define('LOCALES_DIR',     INCLUDES_DIR . 'locales' . DS);
 define('TEMPLATES_DIR',   INCLUDES_DIR . 'templates' . DS);
 define('CONTROLLERS_DIR', INCLUDES_DIR . 'controllers' . DS);
 define('WEBROOT_DIR',     WOW_DIRECTORY . DS . 'webroot' . DS);
+define('CACHE_DIR',       WOW_DIRECTORY . DS . 'cache' . DS);
 
 // Load defines
 include(INCLUDES_DIR . 'revision_nr.php');
@@ -58,6 +59,8 @@ include(CONFIGS_DIR . 'WoWConfig.php');
 // Load libraries
 include(CLASSES_DIR . 'libs' . DS . 'mysqldatabase.php');
 include(CLASSES_DIR . 'libs' . DS . 'log.php');
+include(CLASSES_DIR . 'libs' . DS . 'cacher.php');
+
 // Load classes
 include(CLASSES_DIR . 'class.db.php');
 include(CLASSES_DIR . 'class.wow.php');
